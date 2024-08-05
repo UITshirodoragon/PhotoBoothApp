@@ -1,0 +1,1 @@
+Đây là file chứa các file log của hệ thống

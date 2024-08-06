@@ -2,7 +2,7 @@ import customtkinter as ctk
 import cv2
 from PIL import Image, ImageTk
 import time
-import User_Image_Gallery as UIG
+import User_Image_Gallery_Interface as UIG
 import Get_Started_Interface as GSI
 import Camera_Configuration_Interface as CCI
 
@@ -10,6 +10,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
     def __init__(self, parent):
          # inherit from CTkFrame
         super().__init__(master = parent)
+        self.is_captured_yet = False
         self.countdown_time = 3
         self.countdown_time_temp = self.countdown_time
         self.Captured_numbers = 0
@@ -33,31 +34,6 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                 )
 
 
-        # Capture button
-        #Import capture_button.png
-        capture_button_image = Image.open('DataStorage/Icon/capture_button.png')
-        self.capture_button_imageCTk = ctk.CTkImage(light_image=capture_button_image,
-                                               dark_image=capture_button_image,
-                                               size = (100, 100))
-        
-        #Create capture_button
-        self.capture_button = ctk.CTkButton(self,
-                                            width=80,
-                                            height=80,
-                                            fg_color='transparent',
-                                            bg_color='transparent',
-                                            border_width=0,
-                                            text = '',
-                                            hover_color='gray',
-                                            image = self.capture_button_imageCTk,
-                                            command = self.Countdown)
-        
-        #Layout capture_button
-        self.capture_button.place(relx = 0.95,
-                                rely = 0.5,
-                                anchor = 'center')
-        
-
        # Countdown label
         self.countdown_label = ctk.CTkLabel(self,
                                         text = '',
@@ -79,7 +55,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
 
     def Take_Picture(self):
         ret, frame = self.cap.read()
-        # Check if image is captured
+        # Check if image is successfully captured
         if ret:
             self.Captured_numbers +=1
             Notification_label = ctk.CTkLabel(self,
@@ -94,11 +70,12 @@ class Image_Capture_Interface(ctk.CTkFrame):
         Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
         Notification_label.after(1000, Notification_label.place_forget) # close the nofitication
         cv2.imwrite(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png', frame) # Save image
-
+        #Tell that an image is captured
+        self.is_captured_yet = True
 
 
     def Countdown(self):
-        if self.countdown_time_temp > 0:
+        if self.countdown_time_temp > 0:            
             self.countdown_label.configure(text = f'{self.countdown_time_temp}')
             self.countdown_label.place(relx=0.5, rely=0.5, anchor = 'center')
             self.countdown_time_temp -= 1

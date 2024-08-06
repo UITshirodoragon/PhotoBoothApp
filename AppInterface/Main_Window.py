@@ -2,7 +2,7 @@ import customtkinter as ctk
 from PIL import Image
 import Get_Started_Interface as GSI
 import Image_Capture_Interface as ICI
-import User_Image_Gallery as UIG
+import User_Image_Gallery_Interface as UIG
 import Get_Started_Interface as GSI
 import Camera_Configuration_Interface as CCI
 
@@ -40,10 +40,24 @@ def return_image_capture_interface():
                                     relwidth = 1,
                                     relheight = 0.2)
         
+def capture_and_update_gallery():
+        if capture_screen.is_captured_yet:
+                capture_screen.is_captured_yet = False
+                #Enable capture button
+                capture_button.configure(command = capture_and_update_gallery)
+                gallery_screen.gallery_images_display()
+        else:
+                #Disable capture button
+                capture_button.configure(command = None)
+                #Capture
+                capture_screen.Countdown()
+                #Wait for image is captured then update gallery
+                gallery_screen.after(int((chosen_countdown_time + 0.5) * 1000), capture_and_update_gallery)
+        
 '''Camera configuration function'''
 def swap_capture_mode():
 
-    #Swap icon
+    #Swap capture button and gif mode button
     global gif_mode
     if gif_mode:
         gif_mode = False
@@ -64,10 +78,12 @@ def choosing_countdown_mode():
             choosing_frame.place_forget()
 
 def choosing_3():
-        global current_mode_countdown_time, is_countdown_button_pressed
+        global current_mode_countdown_time, is_countdown_button_pressed, chosen_countdown_time
         current_countdown_mode_button_off.configure(image = countdown_mode_3_imageCTk)
         current_countdown_mode_button_on.configure(image = countdown_mode_3_imageCTk)
+        chosen_countdown_time = 3
         capture_screen.countdown_time = 3
+        capture_screen.countdown_time_temp = 3
         countdown_mode_3_button.grid_forget()
         countdown_mode_5_button.grid(row = 1, column = 0, sticky = 'nsew', padx = 4, pady = 4)
         countdown_mode_10_button.grid(row = 2, column = 0, sticky = 'nsew', padx = 4, pady = 4)
@@ -75,10 +91,12 @@ def choosing_3():
         choosing_frame.place_forget()
 
 def choosing_5():
-        global current_mode_countdown_time, is_countdown_button_pressed
+        global current_mode_countdown_time, is_countdown_button_pressed, chosen_countdown_time
         current_countdown_mode_button_off.configure(image = countdown_mode_5_imageCTk)
         current_countdown_mode_button_on.configure(image = countdown_mode_5_imageCTk)
+        chosen_countdown_time = 5
         capture_screen.countdown_time = 5
+        capture_screen.countdown_time_temp = 5
         countdown_mode_5_button.grid_forget()
         countdown_mode_3_button.grid(row = 1, column = 0, sticky = 'nsew', padx = 4, pady = 4)
         countdown_mode_10_button.grid(row = 2, column = 0, sticky = 'nsew', padx = 4, pady = 4)
@@ -86,10 +104,12 @@ def choosing_5():
         choosing_frame.place_forget()
       
 def choosing_10():
-        global current_mode_countdown_time, is_countdown_button_pressed
+        global current_mode_countdown_time, is_countdown_button_pressed, chosen_countdown_time
         current_countdown_mode_button_off.configure(image = countdown_mode_10_imageCTk)
         current_countdown_mode_button_on.configure(image = countdown_mode_10_imageCTk)
+        chosen_countdown_time = 10
         capture_screen.countdown_time = 10
+        capture_screen.countdown_time_temp = 10
         countdown_mode_10_button.grid_forget()
         countdown_mode_3_button.grid(row = 1, column = 0, sticky = 'nsew', padx = 4, pady = 4)
         countdown_mode_5_button.grid(row = 2, column = 0, sticky = 'nsew', padx = 4, pady = 4)
@@ -114,6 +134,31 @@ start_screen.pack(expand = True, fill = 'both')
 window.bind_all('<Button>', Next_To_Capture_Screen)
 
 '''Image capture widgets'''
+
+# Capture button
+#Import capture_button.png
+capture_button_image = Image.open('DataStorage/Icon/capture_button.png')
+capture_button_imageCTk = ctk.CTkImage(light_image=capture_button_image,
+                                        dark_image=capture_button_image,
+                                        size = (100, 100))
+
+#Create capture_button
+capture_button = ctk.CTkButton(capture_screen,
+                                width=80,
+                                height=80,
+                                fg_color='transparent',
+                                bg_color='transparent',
+                                border_width=0,
+                                text = '',
+                                hover_color='gray',
+                                image = capture_button_imageCTk,
+                                command = capture_and_update_gallery)
+
+#Layout capture_button
+capture_button.place(relx = 0.95,
+                        rely = 0.5,
+                        anchor = 'center')
+
 # Gallery button
 #Import gallery_button_image.png
 gallery_button_image = Image.open('DataStorage/Icon/gallery_button_image.png')
@@ -223,6 +268,8 @@ countdown_mode_10_imageCTk = ctk.CTkImage(light_image = countdown_mode_10_image,
 #Create countdown mode button
 #Variable to check if the button is pressed or not
 is_countdown_button_pressed = False
+#variable to save countdown time is chosen
+chosen_countdown_time = 3
 #Choosing frame
 choosing_frame = ctk.CTkFrame(capture_screen)
 countdown_mode_3_button = ctk.CTkButton(choosing_frame,

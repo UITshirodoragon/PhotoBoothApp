@@ -11,7 +11,7 @@ class User_Image_Gallery(ctk.CTkFrame):
         self.image_number = 0
         self.is_forward_button_pressed = False
         self.is_backward_button_pressed = False
-        self.is_any_image_presenting = False
+        self.choosing_image_index = 0
         #Create list of button with image
         self.list_image_button = []
         #Create list of button state
@@ -90,8 +90,7 @@ class User_Image_Gallery(ctk.CTkFrame):
                             image=ctk.CTkImage(light_image=Image.open(self.image_paths[i]),
                                                 dark_image=Image.open(self.image_paths[i]),
                                                 size = (150, 100)),
-                                                command = self.display_image)
-            self.is_any_image_presenting.append(False)
+                                                command = None)
             self.list_image_button.append(image)
         #Update images in gallery
         self.gallery_images_update()

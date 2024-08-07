@@ -33,7 +33,12 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                 relwidth=1,
                                 anchor = 'center',
                                 )
-
+        
+        #Notification label 
+        self.Notification_label = ctk.CTkLabel(self,
+                            text = '',
+                            font = ('Arial', 30),
+                            fg_color='transparent')
 
        # Countdown label
         self.countdown_label = ctk.CTkLabel(self,
@@ -59,17 +64,11 @@ class Image_Capture_Interface(ctk.CTkFrame):
         # Check if image is successfully captured
         if ret:
             self.Captured_numbers +=1
-            Notification_label = ctk.CTkLabel(self,
-                                        text = 'Captured successfully',
-                                        font = ('Arial', 30),
-                                        fg_color='transparent')
+            self.Notification_label.configure(text = 'Captured successfully')
         else:
-            Notification_label = ctk.CTkLabel(self,
-                                          text = 'Captured unsuccessfully',
-                                          font = ('Arial', 0),
-                                          fg_color='transparent')
-        Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
-        Notification_label.after(1000, Notification_label.place_forget) # close the nofitication
+            self.Notification_label.configure(text = 'Captured unsuccessfully')
+        self.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
+        self.Notification_label.after(500, self.Notification_label.place_forget) # close the nofitication
         cv2.imwrite(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png', frame) # Save image
         #Tell that an image is captured
         self.is_captured_yet = True

@@ -43,6 +43,8 @@ def return_image_capture_interface():
 def capture_and_update_gallery():
         if capture_screen.is_captured_yet:
                 capture_screen.is_captured_yet = False
+                #Enable capture button
+                capture_button.configure(command = capture_and_update_gallery)
                 captured_image_path = capture_screen.just_captured_image_path
                 captured_image_button = ctk.CTkButton(gallery_screen.captured_images_frame,
                                                         text ='',
@@ -54,9 +56,7 @@ def capture_and_update_gallery():
                                                                                 size = (150, 100)))
                 gallery_screen.list_image_button.append(captured_image_button)
                 gallery_screen.image_number += 1
-                gallery_screen.gallery_images_display()
-                #Enable capture button
-                capture_button.configure(command = capture_and_update_gallery)
+                gallery_screen.gallery_images_update()
         else:
                 #Disable capture button
                 capture_button.configure(command = None)

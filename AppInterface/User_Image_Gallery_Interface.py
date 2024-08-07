@@ -11,8 +11,16 @@ class User_Image_Gallery(ctk.CTkFrame):
         self.image_number = 0
         self.is_forward_button_pressed = False
         self.is_backward_button_pressed = False
+        self.is_any_image_presenting = False
         #Create list of button with image
         self.list_image_button = []
+        #Create list of button state
+        self.is_any_image_presenting = []
+        #Display image label
+        self.display_image_label = ctk.CTkLabel(self,
+                                                text = '',
+                                                fg_color='transparent',
+                                                bg_color='transparent')
         #Create captured images frame
         self.captured_images_frame = ctk.CTkFrame(self,
                                                    bg_color='black',
@@ -81,13 +89,23 @@ class User_Image_Gallery(ctk.CTkFrame):
                             hover_color='gray',
                             image=ctk.CTkImage(light_image=Image.open(self.image_paths[i]),
                                                 dark_image=Image.open(self.image_paths[i]),
-                                                size = (150, 100)))
+                                                size = (150, 100)),
+                                                command = self.display_image)
+            self.is_any_image_presenting.append(False)
             self.list_image_button.append(image)
-        #Display images in gallery
-        self.gallery_images_display()
+        #Update images in gallery
+        self.gallery_images_update()
             
+    def display_image(self):
+        if self.is_any_image_presenting:
+            self.display_image_label.place_forget()
+        else:
+            self.display_image_label.place(relx = 0, rely = 0.1)
+            for state_index in range(len(self.is_any_image_presenting)):
+                if state_index:
+                   self.display_image_label.configure(image = self.list_image_button[state_index]._image)
 
-    def gallery_images_display(self):
+    def gallery_images_update(self):
         #Set index and stop number base on forward or backward button pressed
         #Set index number base on current page
         image_index = self.current_page * 10 - 1
@@ -111,9 +129,8 @@ class User_Image_Gallery(ctk.CTkFrame):
                     self.list_image_button[image_index].grid(row = i,
                                                         column = j,
                                                         sticky='nsew',
-                                                        columnspan = 2,
-                                                        padx=1,
-                                                        pady=1)
+                                                        columnspan = 2)
+                                                        
                     image_index -= 1
                     if image_index < stop_number:
                         break
@@ -130,11 +147,11 @@ class User_Image_Gallery(ctk.CTkFrame):
             return None
         self.current_page += 1
         self.is_forward_button_pressed = True
-        self.gallery_images_display()
+        self.gallery_images_update()
     
     def Move_Backward(self):
         if (self.current_page == 1) or (self.image_number == 0):
             return None
         self.current_page -= 1
         self.is_backward_button_pressed = True
-        self.gallery_images_display()
+        self.gallery_images_update()

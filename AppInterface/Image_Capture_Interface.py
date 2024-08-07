@@ -11,6 +11,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
          # inherit from CTkFrame
         super().__init__(master = parent)
         self.is_captured_yet = False
+        self.just_captured_image_path = None
         self.countdown_time = 3
         self.countdown_time_temp = self.countdown_time
         self.Captured_numbers = 0
@@ -72,6 +73,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
         cv2.imwrite(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png', frame) # Save image
         #Tell that an image is captured
         self.is_captured_yet = True
+        self.just_captured_image_path = f'DataStorage/ImageGallery/image{self.Captured_numbers}.png'
 
 
     def Countdown(self):

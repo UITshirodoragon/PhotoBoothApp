@@ -43,9 +43,20 @@ def return_image_capture_interface():
 def capture_and_update_gallery():
         if capture_screen.is_captured_yet:
                 capture_screen.is_captured_yet = False
+                captured_image_path = capture_screen.just_captured_image_path
+                captured_image_button = ctk.CTkButton(gallery_screen.captured_images_frame,
+                                                        text ='',
+                                                        bg_color='transparent',
+                                                        fg_color='transparent',
+                                                        hover_color='gray',
+                                                        image=ctk.CTkImage(light_image=Image.open(captured_image_path),
+                                                                                dark_image=Image.open(captured_image_path),
+                                                                                size = (150, 100)))
+                gallery_screen.list_image_button.append(captured_image_button)
+                gallery_screen.image_number += 1
+                gallery_screen.gallery_images_display()
                 #Enable capture button
                 capture_button.configure(command = capture_and_update_gallery)
-                gallery_screen.gallery_images_display()
         else:
                 #Disable capture button
                 capture_button.configure(command = None)
@@ -61,12 +72,12 @@ def swap_capture_mode():
     global gif_mode
     if gif_mode:
         gif_mode = False
-        capture_mode_button.configure(image = capture_screen.capture_button_imageCTk)
-        capture_screen.capture_button.configure(image = gif_image_CTk)
+        capture_mode_button.configure(image = capture_button_imageCTk)
+        capture_button.configure(image = gif_image_CTk)
     else:
         gif_mode = True
         capture_mode_button.configure(image = gif_image_CTk)
-        capture_screen.capture_button.configure(image = capture_screen.capture_button_imageCTk)
+        capture_button.configure(image = capture_button_imageCTk)
 
 def choosing_countdown_mode():
       global is_countdown_button_pressed

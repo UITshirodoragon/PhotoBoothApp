@@ -100,7 +100,6 @@ def choosing_10():
 window = ctk.CTk()
 window.title('Photobooth')
 window.geometry('1024x600')
-window.resizable(width=False, height=False)
 ctk.set_appearance_mode('light')
 '''Main code'''
 
@@ -108,10 +107,9 @@ ctk.set_appearance_mode('light')
 start_screen = GSI.Get_Started_Interface(window)
 capture_screen = ICI.Image_Capture_Interface(window)
 gallery_screen = UIG.User_Image_Gallery(window)
-
 camera_configuration = CCI.Camera_Configuration_Interface(capture_screen, -0.2, 0)
 
-start_screen.pack()
+start_screen.pack(expand = True, fill = 'both')
  # Detect press event on the main window to delete the frame
 window.bind_all('<Button>', Next_To_Capture_Screen)
 

@@ -35,7 +35,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
 
         # Capture button
         #Import capture_button.png
-        capture_button_image = Image.open('DataStorage/Icon/capture_button.png')
+        capture_button_image = Image.open('DataStorage/Icon/Capture_button.png')
         self.capture_button_imageCTk = ctk.CTkImage(light_image=capture_button_image,
                                                dark_image=capture_button_image,
                                                size = (100, 100))

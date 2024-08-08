@@ -1,9 +1,9 @@
 import customtkinter as ctk
-from PIL import Image
+from PIL import Image, ImageTk
 import Image_Capture_Interface as ICI
 import glob
 
-class User_Image_Gallery(ctk.CTkFrame):
+class User_Image_Gallery_Interface(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
@@ -11,16 +11,18 @@ class User_Image_Gallery(ctk.CTkFrame):
         self.image_number = 0
         self.is_forward_button_pressed = False
         self.is_backward_button_pressed = False
-        self.choosing_image_index = 0
+        self.is_any_image_presenting = False
+        self.choosing_image_index = None
         #Create list of button with image
         self.list_image_button = []
-        #Create list of button state
-        self.is_any_image_presenting = []
-        #Display image label
-        self.display_image_label = ctk.CTkLabel(self,
-                                                text = '',
-                                                fg_color='transparent',
-                                                bg_color='transparent')
+        #Display image canvas
+        self.display_image_canvas = ctk.CTkCanvas(self,
+                                                  width = 921,
+                                                  height = 690)
+        self.display_image_canvas.place(relx = 0.05,
+                                        rely = 0.1,
+                                        width = 921,
+                                        height= 690)
         #Create captured images frame
         self.captured_images_frame = ctk.CTkFrame(self,
                                                    bg_color='black',
@@ -39,7 +41,10 @@ class User_Image_Gallery(ctk.CTkFrame):
         self.no_image_label = ctk.CTkLabel(self.captured_images_frame,
                           text = 'No image captured yet',
                           font = ('Arial', 20))
-        
+        self.no_image_is_chosen_label = ctk.CTkLabel(self.display_image_canvas,
+                          text = 'No image is chosen yet',
+                          font = ('Arial', 20))
+        self.no_image_is_chosen_label.place(relx = 0.5, rely = 0.5, anchor = 'center')
         #Move forward button
         #Import right_arrow.png
         move_forward_button_image = Image.open('DataStorage/Icon/right_arrow.png')
@@ -75,34 +80,35 @@ class User_Image_Gallery(ctk.CTkFrame):
         self.move_backward_button.grid(row = 6, column = 0, columnspan = 3,sticky = 'nsew')
         #Update images
         #Update image paths
-        self.image_paths = glob.glob('DataStorage/ImageGallery/*.png')
+        self.image_paths = glob.glob('DataStorage/ImageGallery/*.jpg')
         #Change folder path format
         for path in self.image_paths:
             path.replace('\\', '/')
         #Get image number
         self.image_number = len(self.image_paths)
-        for i in range(self.image_number):
-            image = ctk.CTkButton(self.captured_images_frame,
-                            text ='',
-                            bg_color='transparent',
-                            fg_color='transparent',
-                            hover_color='gray',
-                            image=ctk.CTkImage(light_image=Image.open(self.image_paths[i]),
-                                                dark_image=Image.open(self.image_paths[i]),
-                                                size = (150, 100)),
-                                                command = None)
-            self.list_image_button.append(image)
+        if self.image_number != 0:
+            for i in range(self.image_number):
+                image = ctk.CTkButton(self.captured_images_frame,
+                                text ='',
+                                width= 153,
+                                height = 100,
+                                bg_color='transparent',
+                                fg_color='transparent',
+                                hover_color='gray',
+                                image=ctk.CTkImage(light_image=Image.open(self.image_paths[i]),
+                                                    dark_image=Image.open(self.image_paths[i]),
+                                                    size = (153, 100)),
+                                command = lambda imageTk = ImageTk.PhotoImage(Image.open(self.image_paths[i]).resize((921, 690))): self.button_is_chosen(imageTk))
+                self.list_image_button.append(image)
+        print(f'{self.parent.winfo_width()}x{self.parent.winfo_height()}')
+        #Find which button is pressed
         #Update images in gallery
         self.gallery_images_update()
-            
-    def display_image(self):
-        if self.is_any_image_presenting:
-            self.display_image_label.place_forget()
-        else:
-            self.display_image_label.place(relx = 0, rely = 0.1)
-            for state_index in range(len(self.is_any_image_presenting)):
-                if state_index:
-                   self.display_image_label.configure(image = self.list_image_button[state_index]._image)
+
+    def button_is_chosen(self, imageTk):
+        self.no_image_is_chosen_label.place_forget()
+        self.display_image_canvas.create_image(0, 0, image = imageTk, anchor = 'nw')
+
 
     def gallery_images_update(self):
         #Set index and stop number base on forward or backward button pressed
@@ -128,8 +134,9 @@ class User_Image_Gallery(ctk.CTkFrame):
                     self.list_image_button[image_index].grid(row = i,
                                                         column = j,
                                                         sticky='nsew',
-                                                        columnspan = 2)
-                                                        
+                                                        columnspan = 3,
+                                                        padx=1,
+                                                        pady=1)                                              
                     image_index -= 1
                     if image_index < stop_number:
                         break

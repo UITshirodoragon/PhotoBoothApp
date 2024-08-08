@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from PIL import Image
+from PIL import Image, ImageTk
 import Get_Started_Interface as GSI
 import Image_Capture_Interface as ICI
 import User_Image_Gallery_Interface as UIG
@@ -20,19 +20,23 @@ def Next_To_Capture_Screen(event):
 '''Image capture interface function'''
 def back_to_start_screen():
         if camera_configuration.at_start_position == False:
-              camera_configuration.Move_Up()
+              camera_configuration.Move_Up(toggle_button)
+              choosing_frame.place_forget()
         capture_screen.pack_forget()
         start_screen.pack(expand = True, fill = 'both')
         window.bind_all('<Button>', Next_To_Capture_Screen) 
 
 def go_to_gallery():
         capture_screen.pack_forget()
+        choosing_frame.place_forget()
         gallery_screen.pack(expand = True, fill = 'both')
 
 '''User image gallery function'''
 def return_image_capture_interface():
+        gallery_screen.no_image_is_chosen_label.place(relx = 0.5, rely = 0.5, anchor = 'center')
+        gallery_screen.display_image_canvas.delete('all')
         if camera_configuration.at_start_position == False:
-              camera_configuration.Move_Up()
+              camera_configuration.Move_Up(toggle_button)
         gallery_screen.pack_forget()
         capture_screen.pack(expand = True, fill = 'both')
         camera_configuration.place(relx = 0,
@@ -44,22 +48,32 @@ def capture_and_update_gallery():
         if capture_screen.is_captured_yet:
                 capture_screen.is_captured_yet = False
                 #Enable capture button
-                capture_button.configure(command = capture_and_update_gallery)
+                capture_button.configure(state = 'normal', command = capture_and_update_gallery)
+                gallery_button.configure(state = 'normal', command = go_to_gallery)
+                toggle_button.configure(state = 'normal', command = call_toggle_slide)
+                Return_start_screen_button.configure(state = 'normal', command = back_to_start_screen)
                 captured_image_path = capture_screen.just_captured_image_path
+                imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((921, 690))))
                 captured_image_button = ctk.CTkButton(gallery_screen.captured_images_frame,
                                                         text ='',
+                                                        width=153,
+                                                        height = 100,
                                                         bg_color='transparent',
                                                         fg_color='transparent',
                                                         hover_color='gray',
                                                         image=ctk.CTkImage(light_image=Image.open(captured_image_path),
                                                                                 dark_image=Image.open(captured_image_path),
-                                                                                size = (150, 100)))
+                                                                                size = (153, 100)),
+                                                        command = lambda : gallery_screen.button_is_chosen(imageTk))
                 gallery_screen.list_image_button.append(captured_image_button)
                 gallery_screen.image_number += 1
                 gallery_screen.gallery_images_update()
         else:
                 #Disable capture button
-                capture_button.configure(command = None)
+                capture_button.configure(state = 'disable', command = None)
+                gallery_button.configure(state = 'disable', command = None)
+                toggle_button.configure(state = 'disable', command = None)
+                Return_start_screen_button.configure(state = 'disable', command = None)
                 #Capture
                 capture_screen.Countdown()
                 #Wait for image is captured then update gallery
@@ -87,6 +101,10 @@ def choosing_countdown_mode():
       else:
             is_countdown_button_pressed = False
             choosing_frame.place_forget()
+
+def call_toggle_slide():
+       camera_configuration.Toggle_Slide(choosing_frame, toggle_button)
+              
 
 def choosing_3():
         global current_mode_countdown_time, is_countdown_button_pressed, chosen_countdown_time
@@ -130,6 +148,7 @@ def choosing_10():
 '''Create window'''
 window = ctk.CTk()
 window.title('Photobooth')
+window.resizable(width=False, height=False)
 window.geometry('1024x600')
 ctk.set_appearance_mode('light')
 '''Main code'''
@@ -137,7 +156,7 @@ ctk.set_appearance_mode('light')
 '''Interface'''
 start_screen = GSI.Get_Started_Interface(window)
 capture_screen = ICI.Image_Capture_Interface(window)
-gallery_screen = UIG.User_Image_Gallery(window)
+gallery_screen = UIG.User_Image_Gallery_Interface(window)
 camera_configuration = CCI.Camera_Configuration_Interface(capture_screen, -0.2, 0)
 
 start_screen.pack(expand = True, fill = 'both')
@@ -201,7 +220,7 @@ Return_button_imageCTk = ctk.CTkImage(light_image=Return_button_image,
                                         dark_image=Return_button_image)
 
 #Create return_button
-Return_button = ctk.CTkButton(capture_screen,
+Return_start_screen_button = ctk.CTkButton(capture_screen,
                                 width=50,
                                 height=50,
                                 fg_color='transparent',
@@ -212,8 +231,8 @@ Return_button = ctk.CTkButton(capture_screen,
                                 image = Return_button_imageCTk,
                                 command = back_to_start_screen)
 #Layout return_button
-Return_button.place(relx = 0, 
-                    rely = 0)
+Return_start_screen_button.place(relx = 0, 
+                                 rely = 0)
 
 '''User image gallery widgets'''
  # Return image capture interface
@@ -222,7 +241,7 @@ Return_button_image = Image.open('DataStorage/Icon/return_button_image.png')
 Return_button_imageCTk = ctk.CTkImage(light_image=Return_button_image,
                                         dark_image=Return_button_image)
 #Create Return_button
-Return_button = ctk.CTkButton(gallery_screen,
+Return_image_capture_button = ctk.CTkButton(gallery_screen,
                                 width=50,
                                 height=50,
                                 fg_color='transparent',
@@ -232,8 +251,8 @@ Return_button = ctk.CTkButton(gallery_screen,
                                 hover_color='gray',
                                 image = Return_button_imageCTk,
                                 command = return_image_capture_interface)
-Return_button.place(relx = 0, 
-                    rely = 0)
+Return_image_capture_button.place(relx = 0, 
+                                  rely = 0)
 
 '''Camera configuration widgets'''
 #Capture mode button
@@ -346,5 +365,19 @@ current_countdown_mode_button_on.grid(row = 0, column = 0, sticky = 'nsew', padx
 countdown_mode_5_button.grid(row = 1, column = 0, sticky = 'nsew', padx = 4, pady = 4)
 countdown_mode_10_button.grid(row = 2, column = 0, sticky = 'nsew', padx = 4, pady = 4)
 current_countdown_mode_button_off.place(relx = 0.2, rely = 0.5, anchor = 'center')
+
+ # Create toggle button
+toggle_button = ctk.CTkButton(capture_screen,
+                                width=60,
+                                height=3,
+                                bg_color='transparent',
+                                fg_color='transparent',
+                                border_width=0,
+                                text = '',
+                                hover_color='gray',
+                                image = camera_configuration.toggle_button_imageCTk_down_arrow)
+toggle_button.configure(command = call_toggle_slide)
+#Layout toggle button
+toggle_button.place(relx = 0.5, rely = camera_configuration.current_position + -camera_configuration.start_position, anchor = 'n')
 
 window.mainloop()

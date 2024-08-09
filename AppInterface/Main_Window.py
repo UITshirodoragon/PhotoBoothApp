@@ -44,6 +44,9 @@ def return_image_capture_interface():
                                     relwidth = 1,
                                     relheight = 0.2)
         
+def Export_Image():
+       pass
+        
 def capture_and_update_gallery():
         if capture_screen.is_captured_yet:
                 capture_screen.is_captured_yet = False
@@ -65,6 +68,16 @@ def capture_and_update_gallery():
                                                                                 dark_image=Image.open(captured_image_path),
                                                                                 size = (153, 100)),
                                                         command = lambda : gallery_screen.button_is_chosen(imageTk))
+                check_button = ctk.CTkCheckBox(captured_image_button,
+                                               text = '',
+                                               width = 15,
+                                               height= 15,
+                                               onvalue= 1,
+                                               offvalue= 0,
+                                               command = lambda index = gallery_screen.image_number: gallery_screen.export_image(index))
+                check_button.place(relx = 1, rely = 1, anchor = 'se')
+                gallery_screen.export_image_check_button.append(check_button)
+                gallery_screen.list_Image.append(Image.open(captured_image_path))
                 gallery_screen.list_image_button.append(captured_image_button)
                 gallery_screen.image_number += 1
                 gallery_screen.gallery_images_update()
@@ -253,6 +266,15 @@ Return_image_capture_button = ctk.CTkButton(gallery_screen,
                                 command = return_image_capture_interface)
 Return_image_capture_button.place(relx = 0, 
                                   rely = 0)
+#Create export image button
+export_image_button = ctk.CTkButton(gallery_screen.export_image_frame,
+                                                text = 'Export',
+                                                width = 100,
+                                                height=40,
+                                                corner_radius= 30,
+                                                font = ('Arial', 0),
+                                                command = Export_Image)
+export_image_button.place(relx = 0.01, rely = 0.97, anchor = 'sw')
 
 '''Camera configuration widgets'''
 #Capture mode button

@@ -31,6 +31,24 @@ def go_to_gallery():
         choosing_frame.place_forget()
         gallery_screen.pack(expand = True, fill = 'both')
 
+def take_gif():
+        if capture_screen.is_captured_yet:
+                capture_screen.is_captured_yet = False
+                capture_button.configure(state = 'normal', command = take_gif)
+                gallery_button.configure(state = 'normal', command = go_to_gallery)
+                toggle_button.configure(state = 'normal', command = call_toggle_slide)
+                Return_start_screen_button.configure(state = 'normal', command = back_to_start_screen)
+        else:
+               #Disable capture button
+                capture_button.configure(state = 'disable', command = None)
+                gallery_button.configure(state = 'disable', command = None)
+                toggle_button.configure(state = 'disable', command = None)
+                Return_start_screen_button.configure(state = 'disable', command = None)
+                #Capture
+                capture_screen.Countdown()
+                #Capture and update gallery
+                gallery_screen.after(int((chosen_countdown_time + 2 + 0.5) * 1000), take_gif)
+
 '''User image gallery function'''
 def return_image_capture_interface():
         gallery_screen.no_image_is_chosen_label.place(relx = 0.5, rely = 0.5, anchor = 'center')
@@ -57,7 +75,7 @@ def capture_and_update_gallery():
                 Return_start_screen_button.configure(state = 'normal', command = back_to_start_screen)
                 captured_image_path = capture_screen.just_captured_image_path
                 imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((921, 690))))
-                captured_image_button = ctk.CTkButton(gallery_screen.captured_images_frame,
+                captured_image_button = ctk.CTkButton(gallery_screen.image_tab,
                                                         text ='',
                                                         width=153,
                                                         height = 100,
@@ -94,17 +112,20 @@ def capture_and_update_gallery():
         
 '''Camera configuration function'''
 def swap_capture_mode():
-
     #Swap capture button and gif mode button
     global gif_mode
     if gif_mode:
         gif_mode = False
-        capture_mode_button.configure(image = capture_button_imageCTk)
-        capture_button.configure(image = gif_image_CTk)
+        capture_screen.gif_mode = gif_mode
+        capture_mode_button.configure(image = gif_image_CTk)
+        capture_button.configure(image = capture_button_imageCTk, command = capture_and_update_gallery)
+        print(capture_screen.gif_mode)
     else:
         gif_mode = True
-        capture_mode_button.configure(image = gif_image_CTk)
-        capture_button.configure(image = capture_button_imageCTk)
+        capture_screen.gif_mode = gif_mode
+        capture_mode_button.configure(image = capture_button_imageCTk)
+        capture_button.configure(image = gif_image_CTk, command = take_gif)
+        print(capture_screen.gif_mode)
 
 def choosing_countdown_mode():
       global is_countdown_button_pressed
@@ -279,7 +300,7 @@ export_image_button.place(relx = 0.01, rely = 0.97, anchor = 'sw')
 '''Camera configuration widgets'''
 #Capture mode button
 #Variable to check what current mode is
-gif_mode = True
+gif_mode = False
 #Import gif.png
 gif_image = Image.open('DataStorage/Icon/gif.png')
 gif_image_CTk = ctk.CTkImage(light_image=gif_image,

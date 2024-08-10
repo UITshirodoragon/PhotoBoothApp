@@ -46,9 +46,19 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.captured_images_frame.columnconfigure((0 ,1, 2, 3, 4, 5), weight=1, uniform='a')
         self.captured_images_label.grid(row = 0, column = 0, columnspan = 6, sticky = 'nsew')
         self.captured_images_frame.place(relx = 1, rely = 0, relheight=1, relwidth = 0.3, anchor = 'ne')
-    
+        #Create a tab to view image and gif
+        self.tab = ctk.CTkTabview(self.captured_images_frame,
+                                  width = self.captured_images_frame.winfo_width(),
+                                  height= int(self.captured_images_frame.winfo_height() * 5 / 7))
+        self.tab.grid(row = 1, column = 0, rowspan = 5, columnspan = 6, sticky = 'nsew')
+        self.image_tab = self.tab.add('Image')
+        self.image_tab.rowconfigure((0, 1, 2, 3 ,4), weight = 1, uniform='a')
+        self.image_tab.columnconfigure((0, 1), weight=1, uniform='a')
+        self.gif_tab = self.tab.add('GIF')
+        self.image_tab.rowconfigure((0, 1, 2, 3 ,4), weight = 1, uniform='a')
+        self.image_tab.columnconfigure((0, 1), weight=1, uniform='a')
         #Notify that no images are captured label
-        self.no_image_label = ctk.CTkLabel(self.captured_images_frame,
+        self.no_image_label = ctk.CTkLabel(self.image_tab,
                           text = 'No image captured yet',
                           font = ('Arial', 20))
         self.no_image_is_chosen_label = ctk.CTkLabel(self.display_image_canvas,
@@ -90,7 +100,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.move_backward_button.grid(row = 6, column = 0, columnspan = 3,sticky = 'nsew')
         #Update images
         #Update image paths
-        self.image_paths = glob.glob('DataStorage/ImageGallery/*.png')
+        self.image_paths = glob.glob('DataStorage/ImageGallery/*png')
         #Change folder path format
         for path in self.image_paths:
             path.replace('\\', '/')
@@ -98,7 +108,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.image_number = len(self.image_paths)
         if self.image_number != 0:
             for i in range(self.image_number):
-                image = ctk.CTkButton(self.captured_images_frame,
+                image = ctk.CTkButton(self.image_tab,
                                 text ='',
                                 width= 153,
                                 height = 100,
@@ -123,7 +133,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
             #Update image gallery
             self.gallery_images_update()
         else:
-            self.no_image_label.grid(row = 3, column = 0, columnspan = 6, sticky = 'nsew')
+            self.no_image_label.grid(row = 2, column = 0, columnspan = 2, sticky = 'nsew')
 
 
 
@@ -159,17 +169,14 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         stop_number = (self.current_page - 1) * 10
         self.no_image_label.grid_forget()
         #Forget all image in frame
-        for widget in self.captured_images_frame.winfo_children():
+        for widget in self.image_tab.winfo_children():
             if type(widget) is ctk.CTkButton:
                     widget.grid_forget()
-        self.move_forward_button.grid(row = 6, column = 3, columnspan = 3, sticky = 'nsew')
-        self.move_backward_button.grid(row = 6, column = 0, columnspan = 3,sticky = 'nsew')
-        for i in range(1, 6):
-            for j in range(0, 4, 3):
+        for i in range(0, 5):
+            for j in range(0, 2):
                 self.list_image_button[image_index].grid(row = i,
                                                     column = j,
                                                     sticky='nsew',
-                                                    columnspan = 3,
                                                     padx=1,
                                                     pady=1)                                              
                 image_index -= 1

@@ -10,8 +10,6 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.current_page = 1
         self.image_number = 0
         self.export_image_number = 0
-        self.is_forward_button_pressed = False
-        self.is_backward_button_pressed = False
         #Create list of button with image
         self.list_image_button = []
         #Create list of image
@@ -182,15 +180,10 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         
     def Move_Forward(self):
         #Check if the next page exist
-        if self.image_number <= (self.current_page * 10):
-            self.is_forward_button_pressed = False
-            self.current_page -= 1
-            return None
-        elif self.image_number == 0:
+        if (self.image_number == 0) or (self.image_number <= (self.current_page * 10)):
             return None
         else:
             self.current_page += 1
-            self.is_forward_button_pressed = True
             self.gallery_images_update()
     
     def Move_Backward(self):
@@ -198,5 +191,4 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
             return None
         else:
             self.current_page -= 1
-            self.is_backward_button_pressed = True
             self.gallery_images_update()

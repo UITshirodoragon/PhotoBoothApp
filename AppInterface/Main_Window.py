@@ -272,7 +272,7 @@ export_image_button = ctk.CTkButton(gallery_screen.export_image_frame,
                                                 width = 100,
                                                 height=40,
                                                 corner_radius= 30,
-                                                font = ('Arial', 0),
+                                                font = ('Arial', 20),
                                                 command = Export_Image)
 export_image_button.place(relx = 0.01, rely = 0.97, anchor = 'sw')
 

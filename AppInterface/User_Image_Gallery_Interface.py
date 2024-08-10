@@ -92,7 +92,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.move_backward_button.grid(row = 6, column = 0, columnspan = 3,sticky = 'nsew')
         #Update images
         #Update image paths
-        self.image_paths = glob.glob('DataStorage/ImageGallery/*.jpg')
+        self.image_paths = glob.glob('DataStorage/ImageGallery/*.png')
         #Change folder path format
         for path in self.image_paths:
             path.replace('\\', '/')
@@ -122,15 +122,17 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                 self.export_image_check_button.append(check_button)
                 self.list_image_button.append(image)
                 self.list_Image.append(Image.open(self.image_paths[i]))
-
             #Update image gallery
             self.gallery_images_update()
+        else:
+            self.no_image_label.grid(row = 3, column = 0, columnspan = 6, sticky = 'nsew')
+
 
 
     def export_image(self, index):
         if self.export_image_check_button[index].get():
             self.export_image_number += 1
-            self.export_image_label.configure(text = f'You choose: {self.export_image_number} image')
+            self.export_image_label.configure(text = f'You choosed: {self.export_image_number} image')
             self.list_export_image.append(self.list_Image[index])
             self.export_image_frame.place(relx = 0, rely = 1, relwidth = 1, relheight = 0.14, anchor = 'sw')
         else:
@@ -157,29 +159,26 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
             image_index = self.image_number - 1
         #Set stop loop number
         stop_number = (self.current_page - 1) * 10
-        if self.image_number == 0:
-           self.no_image_label.grid(row = 3, column = 0, columnspan = 6, sticky = 'nsew')
-        else:
-            self.no_image_label.grid_forget()
-            #Forget all image in frame
-            for widget in self.captured_images_frame.winfo_children():
-                if type(widget) is ctk.CTkButton:
-                        widget.grid_forget()
-            self.move_forward_button.grid(row = 6, column = 3, columnspan = 3, sticky = 'nsew')
-            self.move_backward_button.grid(row = 6, column = 0, columnspan = 3,sticky = 'nsew')
-            for i in range(1, 6):
-                for j in range(0, 4, 3):
-                    self.list_image_button[image_index].grid(row = i,
-                                                        column = j,
-                                                        sticky='nsew',
-                                                        columnspan = 3,
-                                                        padx=1,
-                                                        pady=1)                                              
-                    image_index -= 1
-                    if image_index < stop_number:
-                        break
+        self.no_image_label.grid_forget()
+        #Forget all image in frame
+        for widget in self.captured_images_frame.winfo_children():
+            if type(widget) is ctk.CTkButton:
+                    widget.grid_forget()
+        self.move_forward_button.grid(row = 6, column = 3, columnspan = 3, sticky = 'nsew')
+        self.move_backward_button.grid(row = 6, column = 0, columnspan = 3,sticky = 'nsew')
+        for i in range(1, 6):
+            for j in range(0, 4, 3):
+                self.list_image_button[image_index].grid(row = i,
+                                                    column = j,
+                                                    sticky='nsew',
+                                                    columnspan = 3,
+                                                    padx=1,
+                                                    pady=1)                                              
+                image_index -= 1
                 if image_index < stop_number:
-                        break
+                    break
+            if image_index < stop_number:
+                    break
         
     def Move_Forward(self):
         #Check if the next page exist

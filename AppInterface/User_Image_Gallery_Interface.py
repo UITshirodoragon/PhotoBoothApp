@@ -7,11 +7,15 @@ class User_Image_Gallery(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
+        #back-end
         self.current_page = 1
         self.image_number = 0
+        #back-end
         self.is_forward_button_pressed = False
         self.is_backward_button_pressed = False
+        #back-end
         self.choosing_image_index = 0
+        #back-end
         #Create list of button with image
         self.list_image_button = []
         #Create list of button state

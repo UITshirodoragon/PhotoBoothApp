@@ -10,14 +10,18 @@ class Image_Capture_Interface(ctk.CTkFrame):
     def __init__(self, parent):
          # inherit from CTkFrame
         super().__init__(master = parent)
+        #back-end?
         self.is_captured_yet = False
         self.just_captured_image_path = None
         self.countdown_time = 3
         self.countdown_time_temp = self.countdown_time
         self.Captured_numbers = 0
+        #back_end?
         self.parent = parent
         
+        #back-end
         self.cap = cv2.VideoCapture(0) # Choose camera
+        #back-end
 
         # Capture frame
         #Create capture_frame
@@ -46,9 +50,11 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                         font = ('Arial', 40),
                                         fg_color = 'transparent')
 
+        #back-end
         # Capture video from camera
         self.Update_frame()
-
+        #back-end
+    #back-end
     def Update_frame(self):
         global image_Tk
         _, frame = self.cap.read() # Get frame from camera
@@ -58,21 +64,21 @@ class Image_Capture_Interface(ctk.CTkFrame):
         image_Tk = ImageTk.PhotoImage(image=img)
         self.capture_frame.create_image(0,0, image = image_Tk, anchor = 'nw')
         self.capture_frame.after(10, self.Update_frame) # Call the Update_Frame() method after every 10 miliseconds
-
+    #back-end
     def Take_Picture(self):
         ret, frame = self.cap.read()
         # Check if image is successfully captured
         if ret:
             self.Captured_numbers +=1
             self.Notification_label.configure(text = 'Captured successfully')
+            cv2.imwrite(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png', frame) # Save image
+            #Tell that an image is captured
+            self.is_captured_yet = True
+            self.just_captured_image_path = f'DataStorage/ImageGallery/image{self.Captured_numbers}.png'
         else:
             self.Notification_label.configure(text = 'Captured unsuccessfully')
         self.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
         self.Notification_label.after(500, self.Notification_label.place_forget) # close the nofitication
-        cv2.imwrite(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png', frame) # Save image
-        #Tell that an image is captured
-        self.is_captured_yet = True
-        self.just_captured_image_path = f'DataStorage/ImageGallery/image{self.Captured_numbers}.png'
 
 
     def Countdown(self):
@@ -85,4 +91,4 @@ class Image_Capture_Interface(ctk.CTkFrame):
             self.countdown_time_temp = self.countdown_time
             self.countdown_label.place_forget()
             self.Take_Picture()
-        
+    #back-end    

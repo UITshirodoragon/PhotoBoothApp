@@ -38,7 +38,7 @@ from AppController import System_Log_Controller
 
 Bước 2: Tạo đối tượng trong file
 
-logger = logger = System_Log_Controller.SystemLogController(user_id, position)
+logger = logger = System_Log_Controller.System_Log_Controller(user_id, position)
 
 Có thể truyền vào: user_id là user_001,...
                 position là vị trí được ghi. vd: Main_window_interface, Camera_Configuration_Controller,...
@@ -62,7 +62,7 @@ with open(file_name, 'w') as file:
     file.write(f"Created file system log at {current_time.strftime('%H:%M:%S %d/%m/%Y')}. Have a great day!\n")
 
 # class
-class SystemLogController:
+class System_Log_Controller:
     def __init__(self, user_id, position):
         
         self.logger = logging.getLogger(user_id + " - "+ position)

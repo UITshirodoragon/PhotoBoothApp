@@ -135,13 +135,11 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
             self.export_image_frame.place(relx = 0, rely = 1, relwidth = 1, relheight = 0.14, anchor = 'sw')
         else:
             self.export_image_number -= 1
-            if self.export_image_number < 0:
-                self.export_image_number = 0
+            self.list_export_image.remove(self.list_Image[index])
             if self.export_image_number == 0:
                 self.export_image_frame.place_forget()
             else:
-                self.list_export_image.remove(self.list_Image[index])
-                self.export_image_label.configure(text = f'You choose: {self.export_image_number} image')
+                self.export_image_label.configure(text = f'You choosed: {self.export_image_number} image')
 
     def button_is_chosen(self, imageTk):
         self.no_image_is_chosen_label.place_forget()

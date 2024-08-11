@@ -1,3 +1,10 @@
+import sys
+import os
+
+# Đường dẫn tới folder chứa module 
+package_controller_path = os.path.abspath(os.path.join('..', 'PhotoBoothApp'))
+if package_controller_path not in sys.path:
+    sys.path.append(package_controller_path)
 import customtkinter as ctk
 import cv2
 from PIL import Image, ImageTk
@@ -5,6 +12,7 @@ import time
 import User_Image_Gallery_Interface as UIG
 import Get_Started_Interface as GSI
 import Camera_Configuration_Interface as CCI
+from AppController import Image_Capture_Controller
 
 class Image_Capture_Interface(ctk.CTkFrame):
     def __init__(self, parent):
@@ -20,8 +28,11 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.parent = parent
         
         #back-end
-        self.cap = cv2.VideoCapture(0) # Choose camera
+        # self.cap = cv2.VideoCapture(0) # Choose camera
         #back-end
+        
+        #khoa add
+        self.controller = Image_Capture_Controller.Image_Capture_Controller()
 
         # Capture frame
         #Create capture_frame
@@ -54,31 +65,41 @@ class Image_Capture_Interface(ctk.CTkFrame):
         # Capture video from camera
         self.Update_frame()
         #back-end
+        
+        
     #back-end
     def Update_frame(self):
         global image_Tk
-        _, frame = self.cap.read() # Get frame from camera
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) #Convert color system
-        frame_array = frame
-        img = Image.fromarray(frame_array).resize((self.parent.winfo_width(), self.parent.winfo_height())) # transfer an array to img
-        image_Tk = ImageTk.PhotoImage(image=img)
-        self.capture_frame.create_image(0,0, image = image_Tk, anchor = 'nw')
-        self.capture_frame.after(10, self.Update_frame) # Call the Update_Frame() method after every 10 miliseconds
+        # _, frame = self.cap.read() # Get frame from camera
+        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) #Convert color system
+        # frame_array = frame
+        # img = Image.fromarray(frame_array).resize((self.parent.winfo_width(), self.parent.winfo_height())) # transfer an array to img
+        # image_Tk = ImageTk.PhotoImage(image=img)
+        self.capture_frame.create_image(0,0, image = self.controller.preview_frame(), anchor = 'nw')
+        self.capture_frame.after(1, self.Update_frame) # Call the Update_Frame() method after every 10 miliseconds
     #back-end
+    
+    
+    
     def Take_Picture(self):
-        ret, frame = self.cap.read()
+        # ret, frame = self.controller.capture()
+        # frame = self.controller.capture()
         # Check if image is successfully captured
-        if ret:
+        if True: 
             self.Captured_numbers +=1
-            self.Notification_label.configure(text = 'Captured successfully')
-            cv2.imwrite(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png', frame) # Save image
+             # close the nofitication
+            
+            # cv2.imwrite(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png', frame) # Save image
+            self.controller.capture_and_save_image(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png')
             #Tell that an image is captured
+    
             self.is_captured_yet = True
             self.just_captured_image_path = f'DataStorage/ImageGallery/image{self.Captured_numbers}.png'
         else:
             self.Notification_label.configure(text = 'Captured unsuccessfully')
-        self.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
-        self.Notification_label.after(500, self.Notification_label.place_forget) # close the nofitication
+            
+        
+        
 
 
     def Countdown(self):
@@ -90,5 +111,9 @@ class Image_Capture_Interface(ctk.CTkFrame):
         else:
             self.countdown_time_temp = self.countdown_time
             self.countdown_label.place_forget()
+            self.Notification_label.configure(text = 'Captured successfully')
+            self.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
+            self.Notification_label.after(500, self.Notification_label.place_forget)
             self.Take_Picture()
+            
     #back-end    

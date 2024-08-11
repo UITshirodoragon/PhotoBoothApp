@@ -38,6 +38,40 @@ def take_gif():
                 gallery_button.configure(state = 'normal', command = go_to_gallery)
                 toggle_button.configure(state = 'normal', command = call_toggle_slide)
                 Return_start_screen_button.configure(state = 'normal', command = back_to_start_screen)
+                gif_file = Image.open(capture_screen.just_captured_gif_path)
+                frames_Tk = []
+                frames = []
+                for index in range(gif_file.n_frames):
+                        gif_file.seek(index)
+                        frame = gif_file.copy()
+                        frame_Tk = ImageTk.PhotoImage(gif_file.copy().resize((921, 690)))
+                        frames.append(frame)
+                        frames_Tk.append(frame_Tk)
+                gallery_screen.list_gif_Tk.append(frames_Tk)
+                gallery_screen.list_gif.append(frames)
+                gif = ctk.CTkButton(gallery_screen.gif_tab,
+                                text ='',
+                                width= 153,
+                                height = 100,
+                                bg_color='transparent',
+                                fg_color='transparent',
+                                hover_color='gray',
+                                image=ctk.CTkImage(light_image=frames[0],
+                                                    dark_image=frames[0],
+                                                    size = (153, 100)),
+                                command = lambda imageTk_list = frames_Tk: gallery_screen.gif_is_chosen(imageTk_list))
+                check_gif_button = ctk.CTkCheckBox(gif,
+                                               text = '',
+                                               width = 15,
+                                               height= 15,
+                                               onvalue= 1,
+                                               offvalue= 0,
+                                               command = lambda index = gallery_screen.gif_number: gallery_screen.export_gif(index))
+                check_gif_button.place(relx = 1, rely = 1, anchor = 'se')
+                gallery_screen.export_gif_check_button.append(check_gif_button)
+                gallery_screen.list_gif_button.append(gif)
+                #Update image gallery
+                gallery_screen.gallery_gif_update()
         else:
                #Disable capture button
                 capture_button.configure(state = 'disable', command = None)
@@ -47,7 +81,7 @@ def take_gif():
                 #Capture
                 capture_screen.Countdown()
                 #Capture and update gallery
-                gallery_screen.after(int((chosen_countdown_time + 2 + 0.5) * 1000), take_gif)
+                gallery_screen.after(int((chosen_countdown_time + 3 + 5) * 1000), take_gif)
 
 '''User image gallery function'''
 def return_image_capture_interface():
@@ -62,7 +96,7 @@ def return_image_capture_interface():
                                     relwidth = 1,
                                     relheight = 0.2)
         
-def Export_Image():
+def Export_Image(): 
        pass
         
 def capture_and_update_gallery():
@@ -85,16 +119,16 @@ def capture_and_update_gallery():
                                                         image=ctk.CTkImage(light_image=Image.open(captured_image_path),
                                                                                 dark_image=Image.open(captured_image_path),
                                                                                 size = (153, 100)),
-                                                        command = lambda : gallery_screen.button_is_chosen(imageTk))
-                check_button = ctk.CTkCheckBox(captured_image_button,
+                                                        command = lambda : gallery_screen.image_is_chosen(imageTk))
+                check_image_button = ctk.CTkCheckBox(captured_image_button,
                                                text = '',
                                                width = 15,
                                                height= 15,
                                                onvalue= 1,
                                                offvalue= 0,
                                                command = lambda index = gallery_screen.image_number: gallery_screen.export_image(index))
-                check_button.place(relx = 1, rely = 1, anchor = 'se')
-                gallery_screen.export_image_check_button.append(check_button)
+                check_image_button.place(relx = 1, rely = 1, anchor = 'se')
+                gallery_screen.export_image_check_button.append(check_image_button)
                 gallery_screen.list_Image.append(Image.open(captured_image_path))
                 gallery_screen.list_image_button.append(captured_image_button)
                 gallery_screen.image_number += 1
@@ -119,13 +153,11 @@ def swap_capture_mode():
         capture_screen.gif_mode = gif_mode
         capture_mode_button.configure(image = gif_image_CTk)
         capture_button.configure(image = capture_button_imageCTk, command = capture_and_update_gallery)
-        print(capture_screen.gif_mode)
     else:
         gif_mode = True
         capture_screen.gif_mode = gif_mode
         capture_mode_button.configure(image = capture_button_imageCTk)
         capture_button.configure(image = gif_image_CTk, command = take_gif)
-        print(capture_screen.gif_mode)
 
 def choosing_countdown_mode():
       global is_countdown_button_pressed

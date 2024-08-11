@@ -12,6 +12,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
         super().__init__(master = parent)
         self.is_captured_yet = False
         self.just_captured_image_path = None
+        self.just_captured_gif_path = None
         self.gif_mode = False
         self.is_gif_capture_done = False
         self.list_gif_image = []
@@ -85,12 +86,12 @@ class Image_Capture_Interface(ctk.CTkFrame):
             self.Notification_label.configure(text = 'Captured unsuccessfully')
             self.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
             self.Notification_label.after(500, self.Notification_label.place_forget) # close the nofitication
-        if self.gif_image_count < 10:
+        if self.gif_image_count < 75:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
             img = Image.fromarray(frame)
             self.list_gif_image.append(img)
             self.gif_image_count += 1
-            self.capture_frame.after(200, self.Take_gif)
+            self.capture_frame.after(25, self.Take_gif)
         else:
             self.gif_image_count = 0
             self.gif_count += 1
@@ -98,13 +99,14 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                         save_all = True,
                                         append_images=self.list_gif_image[1:],
                                         optimize = True,
-                                        duration = 500,
+                                        duration = 30,
                                         loop = 0)
             self.list_gif_image.clear()
             self.is_captured_yet = True
             self.Notification_label.configure(text = 'Captured successfully')
             self.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
             self.Notification_label.after(500, self.Notification_label.place_forget) # close the nofitication
+            self.just_captured_gif_path = f'DataStorage/GifGallery/Gif{self.gif_count}.gif'
 
     def Countdown(self):
         if self.countdown_time_temp > 0:            

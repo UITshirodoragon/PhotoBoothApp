@@ -24,20 +24,6 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
         self.toggle_button_imageCTk_up_arrow = ctk.CTkImage(light_image = toggle_button_image_up_arrow,
                                                                 dark_image = toggle_button_image_up_arrow,
                                                                 size = (20, 15))
-        # Create toggle button
-        self.toggle_button = ctk.CTkButton(self.parent,
-                                      width=60,
-                                       height=3,
-                                        bg_color='transparent',
-                                        fg_color='transparent',
-                                        border_width=0,
-                                        text = '',
-                                        hover_color='gray',
-                                        image = self.toggle_button_imageCTk_down_arrow,
-                                        command = self.Toggle_Slide)
-        
-        #Layout toggle button
-        self.toggle_button.place(relx = 0.5, rely = self.current_position + -self.start_position, anchor = 'n')
 
         #Flash button  
         #Variable to check if flash are on or off
@@ -89,15 +75,16 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
             self.flash_button.configure(image = self.flash_on_imageCTk)
 
     #Animation
-    def Toggle_Slide(self):
+    def Toggle_Slide(self, choosing_frame, toggle_button):
         #Unpack the frame and the button
-        self.toggle_button.place_forget()
+        toggle_button.place_forget()
         self.place_forget()
         # Check if the slider is at start position
         if self.at_start_position:
-            self.Move_Down()
+            self.Move_Down(toggle_button)
         else:
-            self.Move_Up()
+            choosing_frame.place_forget()
+            self.Move_Up(toggle_button)
 
     #Slide animation
     '''def Move_Down(self):
@@ -131,28 +118,28 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                 self.at_start_position = True
     '''        
     #Pop animation
-    def Move_Down(self):
+    def Move_Down(self, toggle):
         self.current_position += 0.2
-        self.toggle_button.place(relx = 0.5,
-                                    rely = self.current_position + -self.start_position,
-                                    anchor = 'n')
+        toggle.place(relx = 0.5,
+                            rely = self.current_position + -self.start_position,
+                            anchor = 'n')
         self.place(relx = 0,
                     rely = self.current_position,
                     relwidth = 1,
                     relheight = abs(self.start_position - self.end_position))
         # Change direction of arrow and toggle_at_start_position value
-        self.toggle_button.configure(image = self.toggle_button_imageCTk_up_arrow)
+        toggle.configure(image = self.toggle_button_imageCTk_up_arrow)
         self.at_start_position = False
 
-    def Move_Up(self):
+    def Move_Up(self, toggle):
         self.current_position -= 0.2
-        self.toggle_button.place(relx = 0.5,
-                                    rely = self.current_position + -self.start_position,
-                                    anchor = 'n')
+        toggle.place(relx = 0.5,
+                            rely = self.current_position + -self.start_position,
+                            anchor = 'n')
         self.place(relx = 0,
                     rely = self.current_position,
                     relwidth = 1,
                     relheight = abs(self.start_position - self.end_position))
         # Change direction of arrow and toggle_at_start_position value
-        self.toggle_button.configure(image = self.toggle_button_imageCTk_down_arrow)
+        toggle.configure(image = self.toggle_button_imageCTk_down_arrow)
         self.at_start_position = True

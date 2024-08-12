@@ -67,7 +67,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.captured_images_frame.rowconfigure((1, 2, 3, 4, 5), weight=2, uniform='a')
         self.captured_images_frame.rowconfigure((0, 6), weight=1, uniform='a')
         self.captured_images_frame.columnconfigure((0 ,1, 2, 3, 4, 5), weight=1, uniform='a')
-        self.captured_images_label.grid(row = 0, column = 0, columnspan = 6, sticky = 'nsew')
+        self.captured_images_label.grid(row = 0, column = 0, columnspan = 6, sticky='nsew')
         self.captured_images_frame.place(relx = 1, rely = 0, relheight=1, relwidth = 0.3, anchor = 'ne')
         #Create a tab to view image and gif
         self.tab = ctk.CTkTabview(self.captured_images_frame,
@@ -141,8 +141,6 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
             for i in range(self.image_number):
                 image = ctk.CTkButton(self.image_tab,
                                 text ='',
-                                width= 153,
-                                height = 100,
                                 bg_color='transparent',
                                 fg_color='transparent',
                                 hover_color='gray',
@@ -265,8 +263,11 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
 
     def gif_is_chosen(self, index):
         self.no_gif_is_chosen_label.place_forget()
+        self.display_image_canvas.delete('all')
         self.display_gif_index = index
         self.gif_end_display = False
+        for button in self.list_gif_button:
+            button.configure(state = 'disable', command = None)
         self.tab.configure(state = 'disabled')
         self.list_gif_button[index].configure(command = None)
         self.display_gif()
@@ -275,6 +276,8 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         if ((self.gif_mode == True) and (self.gif_end_display == True) and (self.display_gif_index != None)):
             self.display_image_canvas.unbind('<Button>')
             self.gif_end_display = False
+            for button in self.list_gif_button:
+                button.configure(state = 'disable', command = None)
             self.tab.configure(state = 'disabled')
             self.display_gif()
         else:
@@ -287,6 +290,8 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                                             anchor = 'nw')
             self.display_image_canvas.bind('<Button>', lambda event: self.play_gif())
             self.tab.configure(state = 'normal')
+            for i in range(len(self.list_gif_button)):
+               self.list_gif_button[i].configure(state = 'normal', command = lambda index = i: self.gif_is_chosen(index))
             self.list_gif_button[self.display_gif_index].configure(command = lambda index = self.display_gif_index: self.gif_is_chosen(index))
             return None
         else:

@@ -20,15 +20,15 @@ def Next_To_Capture_Screen(event):
 '''Image capture interface function'''
 def back_to_start_screen():
         if camera_configuration.at_start_position == False:
-              camera_configuration.Move_Up(toggle_button)
-              choosing_frame.place_forget()
+                call_toggle_slide()
         capture_screen.pack_forget()
         start_screen.pack(expand = True, fill = 'both')
         window.bind_all('<Button>', Next_To_Capture_Screen) 
 
 def go_to_gallery():
         capture_screen.pack_forget()
-        choosing_frame.place_forget()
+        if camera_configuration.at_start_position == False:
+                        call_toggle_slide()
         gallery_screen.pack(expand = True, fill = 'both')
 
 def take_gif():
@@ -79,6 +79,8 @@ def take_gif():
                 gallery_button.configure(state = 'disable', command = None)
                 toggle_button.configure(state = 'disable', command = None)
                 Return_start_screen_button.configure(state = 'disable', command = None)
+                if camera_configuration.at_start_position == False:
+                        call_toggle_slide()
                 #Capture
                 capture_screen.Countdown()
                 #Capture and update gallery
@@ -86,16 +88,22 @@ def take_gif():
 
 '''User image gallery function'''
 def return_image_capture_interface():
-        gallery_screen.no_image_is_chosen_label.place(relx = 0.5, rely = 0.5, anchor = 'center')
-        gallery_screen.display_image_canvas.delete('all')
-        if camera_configuration.at_start_position == False:
-              camera_configuration.Move_Up(toggle_button)
-        gallery_screen.pack_forget()
-        capture_screen.pack(expand = True, fill = 'both')
-        camera_configuration.place(relx = 0,
-                                    rely = -0.2,
-                                    relwidth = 1,
-                                    relheight = 0.2)
+        if gallery_screen.gif_end_display:
+                if gallery_screen.gif_mode:
+                        gallery_screen.no_gif_is_chosen_label.place(relx = 0.5, rely = 0.5, anchor = 'center')
+                else:
+                        gallery_screen.no_image_is_chosen_label.place(relx = 0.5, rely = 0.5, anchor = 'center')
+                gallery_screen.display_image_canvas.delete('all')
+                if camera_configuration.at_start_position == False:
+                        camera_configuration.Move_Up(toggle_button)
+                gallery_screen.pack_forget()
+                capture_screen.pack(expand = True, fill = 'both')
+                camera_configuration.place(relx = 0,
+                                        rely = -0.2,
+                                        relwidth = 1,
+                                        relheight = 0.2)
+        else:
+                return None
         
 def Export_Image(): 
        pass
@@ -140,6 +148,8 @@ def capture_and_update_gallery():
                 gallery_button.configure(state = 'disable', command = None)
                 toggle_button.configure(state = 'disable', command = None)
                 Return_start_screen_button.configure(state = 'disable', command = None)
+                if camera_configuration.at_start_position == False:
+                        call_toggle_slide()
                 #Capture
                 capture_screen.Countdown()
                 #Wait for image is captured then update gallery
@@ -164,7 +174,7 @@ def choosing_countdown_mode():
       global is_countdown_button_pressed
       if not is_countdown_button_pressed:
         is_countdown_button_pressed = True
-        choosing_frame.place(relx=0.2, rely = 0.3, anchor = 'center')
+        choosing_frame.place(relx=0.2, rely = 0.2825, anchor = 'center')
       else:
             is_countdown_button_pressed = False
             choosing_frame.place_forget()

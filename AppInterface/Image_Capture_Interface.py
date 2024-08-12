@@ -39,12 +39,6 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                 relwidth=1,
                                 anchor = 'center',
                                 )
-        
-        #Notification label 
-        self.Notification_label = ctk.CTkLabel(self,
-                            text = '',
-                            font = ('Arial', 30),
-                            fg_color='transparent')
 
        # Countdown label
         self.countdown_label = ctk.CTkLabel(self,

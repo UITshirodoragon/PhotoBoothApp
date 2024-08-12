@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import Image_Capture_Interface as ICI
+from PIL import Image
 
 class Get_Started_Interface(ctk.CTkFrame):
     def __init__(self, parent):
@@ -12,6 +13,19 @@ class Get_Started_Interface(ctk.CTkFrame):
         self.label = ctk.CTkLabel(self,
                                    text = 'Press to start',
                                    font = ('Arial', 20))
+
+        self.destroy_window_button = ctk.CTkButton(self,
+                                                   text = '',
+                                                   fg_color='transparent',
+                                                   bg_color='transparent',
+                                                   width=30,
+                                                   height=30,
+                                                   hover_color='gray',
+                                                   image = ctk.CTkImage(light_image=Image.open('DataStorage/Icon/quit_button.png'),
+                                                                        dark_image=Image.open('DataStorage/Icon/quit_button.png'),
+                                                                        size = (50, 50)),
+                                                   command = self.parent.destroy)
+        self.destroy_window_button.place(relx = 1, rely = 0, anchor = 'ne')
 
         # Layout
         # Put the label in the center of the frame

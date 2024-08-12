@@ -108,7 +108,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                                 image=ctk.CTkImage(light_image=Image.open(self.image_paths[i]),
                                                     dark_image=Image.open(self.image_paths[i]),
                                                     size = (153, 100)),
-                                command = lambda imageTk = ImageTk.PhotoImage(Image.open(self.image_paths[i]).resize((921, 690))): self.button_is_chosen(imageTk))
+                                command = lambda imageTk = ImageTk.PhotoImage(Image.open(self.image_paths[i]).resize((614, 460))): self.button_is_chosen(imageTk))
                 check_button = ctk.CTkCheckBox(image,
                                                text = '',
                                                width = 15,

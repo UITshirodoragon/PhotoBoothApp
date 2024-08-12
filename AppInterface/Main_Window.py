@@ -56,7 +56,7 @@ def capture_and_update_gallery():
                 toggle_button.configure(state = 'normal', command = call_toggle_slide)
                 Return_start_screen_button.configure(state = 'normal', command = back_to_start_screen)
                 captured_image_path = capture_screen.just_captured_image_path
-                imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((921, 690))))
+                imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((614, 460))))
                 captured_image_button = ctk.CTkButton(gallery_screen.captured_images_frame,
                                                         text ='',
                                                         width=153,
@@ -87,6 +87,8 @@ def capture_and_update_gallery():
                 gallery_button.configure(state = 'disable', command = None)
                 toggle_button.configure(state = 'disable', command = None)
                 Return_start_screen_button.configure(state = 'disable', command = None)
+                if camera_configuration.at_start_position == False:
+                       camera_configuration.Toggle_Slide(choosing_frame, toggle_button)
                 #Capture
                 capture_screen.Countdown()
                 #Wait for image is captured then update gallery
@@ -163,6 +165,7 @@ window = ctk.CTk()
 window.title('Photobooth')
 window.resizable(width=False, height=False)
 window.geometry('1024x600')
+window.attributes('-fullscreen', True)
 ctk.set_appearance_mode('light')
 '''Main code'''
 
@@ -222,9 +225,9 @@ gallery_button = ctk.CTkButton(capture_screen,
                                 command = go_to_gallery)
 
 #Layout gallery_button
-gallery_button.place(relx = 0.95,
-                    rely = 0.9,
-                    anchor = 'center')
+gallery_button.place(relx = 1,
+                    rely = 1,
+                    anchor = 'se')
 
 # Return to get started interface
 #Import return_button_image.png

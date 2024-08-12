@@ -1,7 +1,13 @@
 import platform
 import cv2
-from picamera2 import Picamera2
-import libcamera
+try:
+    if platform.system() == "Linux":
+        from picamera2 import Picamera2
+        import libcamera
+    elif platform.system() == "Windows":
+        pass
+except ImportError as e:
+    print(f"Lỗi {e}")
 from PIL import Image, ImageTk
 import time
 import numpy
@@ -14,6 +20,8 @@ class Image_Capture_Controller:
         # images are named and identified by numbers
         self.Captured_numbers = 1
         self.camera_ready_state = True
+        self.nw_adjust_position_x = None
+        self.nw_adjust_position_y = None
         try:
             # camera state is ready or not
             self.camera_ready_state = True
@@ -21,11 +29,13 @@ class Image_Capture_Controller:
             if platform.system() == 'Windows':
                 # Choose and init camera from CV
                 self.CVcamera = cv2.VideoCapture(0) 
+                self.nw_adjust_position_y = 0
                 
             elif platform.system() == 'Linux': 
                 
                 # init camera from Picamera2
                 self.Picamera = Picamera2()
+                self.nw_adjust_position_y = -84
                 # preview_config = self.Picamera.create_preview_configuration()
                 # capture_config = self.Picamera.create_preview_configuration(lores= {"size" : (1024, 600), "format" : "RGB888"}, main= {"size" : (2592,1944), "format" : "RGB888"}, display="lores")
                 
@@ -64,17 +74,17 @@ class Image_Capture_Controller:
 
     # get preview frame form camera
     def preview_frame(self):
-        global image_Tk
-        
         try:
             # detec
             if platform.system() == 'Windows':
-                
-                frame = self.CVcamera.read() # Get frame from camera
+                _, frame = self.CVcamera.read() # Get frame from camera
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) #Convert color system
-                
-                img = Image.fromarray(frame)
-                # .resize((1024,600)) # transfer an array to img
+                frame_array = frame
+                #img = Image.fromarray(frame_array).resize((self.parent.winfo_width(), self.parent.winfo_height())) # transfer an array to img
+                # image_Tk = ImageTk.PhotoImage(image=img)
+                #frame = self.CVcamera.read() # Get frame from camera
+                #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) #Convert color system
+                img = Image.fromarray(frame_array).resize((1024,768)) # transfer an array to img
                 image_Tk = ImageTk.PhotoImage(image=img)
                 return image_Tk
                 
@@ -103,7 +113,7 @@ class Image_Capture_Controller:
             
             if platform.system() == 'Windows':
                 
-                image = self.CVcamera.read()
+                _, image = self.CVcamera.read()
                 cv2.imwrite(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png', image)
                 
             elif platform.system() == 'Linux':

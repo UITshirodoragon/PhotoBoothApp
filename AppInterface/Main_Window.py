@@ -5,6 +5,7 @@ import Image_Capture_Interface as ICI
 import User_Image_Gallery_Interface as UIG
 import Get_Started_Interface as GSI
 import Camera_Configuration_Interface as CCI
+import platform
 
 #Function defenition
 '''Get started interface function'''
@@ -163,7 +164,8 @@ window = ctk.CTk()
 window.title('Photobooth')
 window.resizable(width=False, height=False)
 window.geometry('1024x600')
-window.attributes("-fullscreen", True)
+if platform.system() == "Linux":
+        window.attributes("-fullscreen", True)
 ctk.set_appearance_mode('light')
 '''Main code'''
 

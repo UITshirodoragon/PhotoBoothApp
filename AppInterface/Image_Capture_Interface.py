@@ -23,7 +23,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.just_captured_image_path = None
         self.countdown_time = 3
         self.countdown_time_temp = self.countdown_time
-        self.Captured_numbers = 0
+        
         #back_end?
         self.parent = parent
         
@@ -31,7 +31,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
         # self.cap = cv2.VideoCapture(0) # Choose camera
         #back-end
         
-        #khoa add
+        #khoa add controller for image capture
         self.controller = Image_Capture_Controller.Image_Capture_Controller()
 
         # Capture frame
@@ -75,29 +75,25 @@ class Image_Capture_Interface(ctk.CTkFrame):
         # frame_array = frame
         # img = Image.fromarray(frame_array).resize((self.parent.winfo_width(), self.parent.winfo_height())) # transfer an array to img
         # image_Tk = ImageTk.PhotoImage(image=img)
-        self.capture_frame.create_image(0,0, image = self.controller.preview_frame(), anchor = 'nw')
+        self.capture_frame.create_image(0,-84, image = self.controller.preview_frame(), anchor = 'nw')
         self.capture_frame.after(1, self.Update_frame) # Call the Update_Frame() method after every 10 miliseconds
     #back-end
     
     
     
     def Take_Picture(self):
-        # ret, frame = self.controller.capture()
-        # frame = self.controller.capture()
-        # Check if image is successfully captured
-        if True: 
-            self.Captured_numbers +=1
-             # close the nofitication
-            
+        if self.controller.camera_ready_state == True: 
+            self.Notification_label.configure(text = 'Captured successfully')
             # cv2.imwrite(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png', frame) # Save image
-            self.controller.capture_and_save_image(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png')
+            self.just_captured_image_path = f'DataStorage/ImageGallery/image{self.controller.Captured_numbers}.png'
+            self.controller.capture_and_save_image()
             #Tell that an image is captured
-    
             self.is_captured_yet = True
-            self.just_captured_image_path = f'DataStorage/ImageGallery/image{self.Captured_numbers}.png'
+            
         else:
             self.Notification_label.configure(text = 'Captured unsuccessfully')
-            
+        self.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
+        self.Notification_label.after(1000, self.Notification_label.place_forget)
         
         
 
@@ -111,9 +107,4 @@ class Image_Capture_Interface(ctk.CTkFrame):
         else:
             self.countdown_time_temp = self.countdown_time
             self.countdown_label.place_forget()
-            self.Notification_label.configure(text = 'Captured successfully')
-            self.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
-            self.Notification_label.after(500, self.Notification_label.place_forget)
             self.Take_Picture()
-            
-    #back-end    

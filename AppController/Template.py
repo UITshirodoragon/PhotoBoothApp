@@ -1,5 +1,3 @@
-import json
-
 class Template:
     def __init__(self, user_id, path, style, number_of_images, images_position_list, stickers_position_list, frame_path):
         self.user_id = user_id
@@ -41,16 +39,7 @@ class Template:
         self.frame_path = frame_path
 
     def save(self, filename):
-        data = {
-            'user_id': self.user_id,
-            # ... các thuộc tính khác
-            'images': self.images_position_list,
-            'stickers': self.stickers_position_list
-        }
-        with open(filename, 'w') as f:
-            json.dump(data, f)
+        pass
 
     def load(self, filename):
-        with open(filename, 'r') as f:
-            data = json.load(f)
-            # Gán dữ liệu từ file vào các thuộc tính của đối tượng
+        pass

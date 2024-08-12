@@ -56,7 +56,7 @@ def capture_and_update_gallery():
                 toggle_button.configure(state = 'normal', command = call_toggle_slide)
                 Return_start_screen_button.configure(state = 'normal', command = back_to_start_screen)
                 captured_image_path = capture_screen.just_captured_image_path
-                imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((921, 690))))
+                imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((614, 460))))
                 captured_image_button = ctk.CTkButton(gallery_screen.captured_images_frame,
                                                         text ='',
                                                         width=153,
@@ -163,6 +163,7 @@ window = ctk.CTk()
 window.title('Photobooth')
 window.resizable(width=False, height=False)
 window.geometry('1024x600')
+window.attributes("-fullscreen", True)
 ctk.set_appearance_mode('light')
 '''Main code'''
 

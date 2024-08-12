@@ -7,10 +7,13 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
+        self.gif_display_frame_count = 0
+        self.display_gif_index = None
         self.current_image_page = 1
         self.current_gif_page = 1
         self.image_number = 0
         self.gif_number = 0
+        self.gif_end_display = True
         self.gif_mode = False
         self.export_image_number = 0
         self.export_gif_number = 0
@@ -32,12 +35,13 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.export_image_check_button = []
         #Display image canvas
         self.display_image_canvas = ctk.CTkCanvas(self,
-                                                  width = 921,
+                                                  width = 614,
                                                   height = 690)
         self.display_image_canvas.place(relx = 0.05,
                                         rely = 0.1,
-                                        width = 921,
+                                        width = 614,
                                         height= 690)
+        self.display_image_canvas.bind('<Button>', lambda event : self.play_gif())
         #Create export image frame
         self.export_image_frame = ctk.CTkFrame(self)
         #Create export image label
@@ -145,7 +149,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                                 image=ctk.CTkImage(light_image=Image.open(self.image_paths[i]),
                                                     dark_image=Image.open(self.image_paths[i]),
                                                     size = (153, 100)),
-                                command = lambda imageTk = ImageTk.PhotoImage(Image.open(self.image_paths[i]).resize((921, 690))): self.image_is_chosen(imageTk))
+                                command = lambda imageTk = ImageTk.PhotoImage(Image.open(self.image_paths[i]).resize((614, 460))): self.image_is_chosen(imageTk))
                 check_image_button = ctk.CTkCheckBox(image,
                                                text = '',
                                                width = 15,
@@ -175,7 +179,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
             for index in range(gif_file.n_frames):
                 gif_file.seek(index)
                 frame = gif_file.copy()
-                frame_Tk = ImageTk.PhotoImage(gif_file.copy().resize((921, 690)))
+                frame_Tk = ImageTk.PhotoImage(gif_file.copy().resize((614, 460)))
                 frames.append(frame)
                 frames_Tk.append(frame_Tk)
             self.list_gif_Tk.append(frames_Tk)
@@ -193,7 +197,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                                 image=ctk.CTkImage(light_image=self.list_gif[i][0],
                                                     dark_image=self.list_gif[i][0],
                                                     size = (153, 100)),
-                                command = lambda imageTk_list = self.list_gif_Tk[i]: self.gif_is_chosen(imageTk_list))
+                                command = lambda index = i: self.gif_is_chosen(index))
                 check_gif_button = ctk.CTkCheckBox(gif,
                                                text = '',
                                                width = 15,
@@ -259,8 +263,41 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.no_image_is_chosen_label.place_forget()
         self.display_image_canvas.create_image(0, 0, image = imageTk, anchor = 'nw')
 
-    def gif_is_chosen(self, imageTk_list):
-        pass
+    def gif_is_chosen(self, index):
+        self.no_gif_is_chosen_label.place_forget()
+        self.display_gif_index = index
+        self.gif_end_display = False
+        self.tab.configure(state = 'disabled')
+        self.list_gif_button[index].configure(command = None)
+        self.display_gif()
+
+    def play_gif(self):
+        if ((self.gif_mode == True) and (self.gif_end_display == True) and (self.display_gif_index != None)):
+            self.display_image_canvas.unbind('<Button>')
+            self.gif_end_display = False
+            self.tab.configure(state = 'disabled')
+            self.display_gif()
+        else:
+            return None
+
+    def display_gif(self):
+        if self.gif_end_display:
+            self.display_image_canvas.create_image(0, 0,
+                                            image = self.list_gif_Tk[self.display_gif_index][self.gif_display_frame_count],
+                                            anchor = 'nw')
+            self.display_image_canvas.bind('<Button>', lambda event: self.play_gif())
+            self.tab.configure(state = 'normal')
+            self.list_gif_button[self.display_gif_index].configure(command = lambda index = self.display_gif_index: self.gif_is_chosen(index))
+            return None
+        else:
+            self.display_image_canvas.create_image(0, 0,
+                                            image = self.list_gif_Tk[self.display_gif_index][self.gif_display_frame_count],
+                                            anchor = 'nw')
+            self.gif_display_frame_count += 1
+            if self.gif_display_frame_count == (len(self.list_gif_Tk[self.display_gif_index]) - 1):
+                self.gif_end_display = True
+                self.gif_display_frame_count = 0
+            self.display_image_canvas.after(25, self.display_gif)
 
     def gallery_gif_update(self):
         #Set index number base on current page

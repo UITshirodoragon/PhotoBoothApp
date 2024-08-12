@@ -44,7 +44,7 @@ def take_gif():
                 for index in range(gif_file.n_frames):
                         gif_file.seek(index)
                         frame = gif_file.copy()
-                        frame_Tk = ImageTk.PhotoImage(gif_file.copy().resize((921, 690)))
+                        frame_Tk = ImageTk.PhotoImage(gif_file.copy().resize((614, 460)))
                         frames.append(frame)
                         frames_Tk.append(frame_Tk)
                 gallery_screen.list_gif_Tk.append(frames_Tk)
@@ -59,7 +59,7 @@ def take_gif():
                                 image=ctk.CTkImage(light_image=frames[0],
                                                     dark_image=frames[0],
                                                     size = (153, 100)),
-                                command = lambda imageTk_list = frames_Tk: gallery_screen.gif_is_chosen(imageTk_list))
+                                command = lambda index = gallery_screen.gif_number: gallery_screen.gif_is_chosen(index))
                 check_gif_button = ctk.CTkCheckBox(gif,
                                                text = '',
                                                width = 15,
@@ -70,6 +70,7 @@ def take_gif():
                 check_gif_button.place(relx = 1, rely = 1, anchor = 'se')
                 gallery_screen.export_gif_check_button.append(check_gif_button)
                 gallery_screen.list_gif_button.append(gif)
+                gallery_screen.gif_number += 1
                 #Update image gallery
                 gallery_screen.gallery_gif_update()
         else:
@@ -81,7 +82,7 @@ def take_gif():
                 #Capture
                 capture_screen.Countdown()
                 #Capture and update gallery
-                gallery_screen.after(int((chosen_countdown_time + 3 + 5) * 1000), take_gif)
+                gallery_screen.after(int((chosen_countdown_time + 3 + 3.5) * 1000), take_gif)
 
 '''User image gallery function'''
 def return_image_capture_interface():
@@ -108,7 +109,7 @@ def capture_and_update_gallery():
                 toggle_button.configure(state = 'normal', command = call_toggle_slide)
                 Return_start_screen_button.configure(state = 'normal', command = back_to_start_screen)
                 captured_image_path = capture_screen.just_captured_image_path
-                imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((921, 690))))
+                imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((614, 460))))
                 captured_image_button = ctk.CTkButton(gallery_screen.image_tab,
                                                         text ='',
                                                         width=153,
@@ -216,6 +217,7 @@ window = ctk.CTk()
 window.title('Photobooth')
 window.resizable(width=False, height=False)
 window.geometry('1024x600')
+window.attributes('-fullscreen',True)
 ctk.set_appearance_mode('light')
 '''Main code'''
 

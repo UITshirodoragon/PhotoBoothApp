@@ -8,7 +8,8 @@ class Get_Started_Interface(ctk.CTkFrame):
         super().__init__(master = parent)
         self.state = True # state of object: True = activate, False = deactivate
         self.parent = parent
-
+        self.capture_screen = None
+        self.camera_configuration = None
         # 'Press to start' label
         self.label = ctk.CTkLabel(self,
                                    text = 'Press to start',
@@ -32,3 +33,13 @@ class Get_Started_Interface(ctk.CTkFrame):
         self.label.place(relx = 0.5,
                           rely = 0.5,
                          anchor = 'center')
+        
+        '''Get started interface function'''
+    def Next_To_Capture_Screen(self, event):
+        self.parent.unbind_all('<Button>')
+        self.pack_forget()
+        self.capture_screen.pack(expand = True, fill = 'both')
+        self.camera_configuration.place(relx = 0,
+                                    rely = -0.2,
+                                    relwidth = 1,
+                                    relheight = 0.2)    

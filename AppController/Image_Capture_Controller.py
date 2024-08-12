@@ -74,6 +74,7 @@ class Image_Capture_Controller:
 
     # get preview frame form camera
     def preview_frame(self):
+        global image_Tk
         try:
             # detec
             if platform.system() == 'Windows':

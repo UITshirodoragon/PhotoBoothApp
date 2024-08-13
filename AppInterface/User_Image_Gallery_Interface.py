@@ -55,7 +55,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.captured_images_label.grid(row = 0, column = 0, columnspan = 2, sticky = 'nsew')
         self.captured_images_frame.place(relx = 1, rely = 0, relheight=1, relwidth = 0.3, anchor = 'ne')
         #Notify that no images are captured label
-        self.no_image_label = ctk.CTkLabel(self.image_tab,
+        self.no_image_label = ctk.CTkLabel(self.captured_images_frame,
                           text = 'No image captured yet',
                           font = ('Arial', 20))
         self.no_image_is_chosen_label = ctk.CTkLabel(self.display_image_canvas,
@@ -139,20 +139,6 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
             self.no_image_label.grid(row = 2, column = 0, columnspan = 2, sticky = 'nsew')
         
 
-    def export_image(self, index):
-        if self.export_image_check_button[index].get():
-            self.export_image_number += 1
-            self.export_image_label.configure(text = f'You choosed: {self.export_image_number} image')
-            self.list_export_image.append(self.list_Image[index])
-            self.export_image_frame.place(relx = 0, rely = 1, relwidth = 1, relheight = 0.14, anchor = 'sw')
-        else:
-            self.export_image_number -= 1
-            self.list_export_image.remove(self.list_Image[index])
-            if self.export_image_number == 0:
-                self.export_image_frame.place_forget()
-            else:
-                self.export_image_label.configure(text = f'You choosed: {self.export_image_number} image')
-
     def image_is_chosen(self, imageTk):
         self.no_image_is_chosen_label.place_forget()
         self.display_image_canvas.create_image(0, 0, image = imageTk, anchor = 'nw')
@@ -160,18 +146,20 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
     def gallery_images_update(self):
         #Set index and stop number base on forward or backward button pressed
         #Set index number base on current page
-        image_index = self.current_image_page * 10 - 1
+        image_index = self.current_page * 10 - 1
         #Constrain index
         if image_index >= self.controller.image_number:
             image_index = self.controller.image_number - 1
         #Set stop loop number
-        stop_number = (self.current_image_page - 1) * 10
+        stop_number = (self.current_page - 1) * 10
         self.no_image_label.grid_forget()
         #Forget all image in frame
-        for widget in self.image_tab.winfo_children():
+        for widget in self.captured_images_frame.winfo_children():
             if type(widget) is ctk.CTkButton:
                     widget.grid_forget()
-        for i in range(0, 5):
+        self.move_backward_button.grid(row = 6, column = 0, sticky = 'nsew')
+        self.move_forward_button.grid(row = 6, column = 1, sticky = 'nsew')
+        for i in range(1, 6):
             for j in range(0, 2):
                 self.controller.list_image_button[image_index].grid(row = i,
                                                     column = j,

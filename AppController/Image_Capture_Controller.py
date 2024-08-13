@@ -32,7 +32,7 @@ class Image_Capture_Controller():
                                                                                 dark_image=Image.open(captured_image_path),
                                                                                 size = ((int(self.capture_screen.parent.winfo_width() * 3 / 32)),
                                                                                         int(self.capture_screen.parent.winfo_height() * 5 / 48))),
-                                                        command = lambda : self.capture_screen.gallery.button_is_chosen(imageTk))
+                                                        command = lambda : self.capture_screen.gallery.image_is_chosen(imageTk))
                 check_button = ctk.CTkCheckBox(captured_image_button,
                                                text = '',
                                                width = 15,

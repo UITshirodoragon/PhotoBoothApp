@@ -32,6 +32,10 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                             highlightthickness = 0,
                                             relief = 'ridge')
         
+        self.Notification_label = ctk.CTkLabel(self,
+                                               text = '',
+                                               font = ('Arial', 40))
+
         #Layout capture_frame
         self.capture_frame.place(relx = 0.5
                                 , rely = 0.5,

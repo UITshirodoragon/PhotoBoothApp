@@ -57,8 +57,8 @@ class Image_Capture_Controller():
                 #Capture
                 self.Countdown()
                 #Wait for image is captured then update gallery
-                self.capture_screen.gallery.after(int((self.capture_screen.camera_configuration.controller.chosen_countdown_time + 0.5) * 1000), self.capture_and_update_gallery)
-        
+                self.capture_screen.gallery.after(int((self.countdown_time + 0.5) * 1000), self.capture_and_update_gallery)
+    
     def Take_Picture(self):
         ret, frame = self.capture_screen.cap.read()
         # Check if image is successfully captured
@@ -73,7 +73,6 @@ class Image_Capture_Controller():
             self.capture_screen.Notification_label.configure(text = 'Captured unsuccessfully')
         self.capture_screen.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
         self.capture_screen.Notification_label.after(500, self.capture_screen.Notification_label.place_forget) # close the nofitication
-
 
     def Countdown(self):
         if self.countdown_time_temp > 0:            

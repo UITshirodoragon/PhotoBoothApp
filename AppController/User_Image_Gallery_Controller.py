@@ -5,6 +5,7 @@ import glob
 class User_Image_Gallery_Controller():
     def __init__(self, gallery):
         self.gallery = gallery
+        #Image variable
         self.list_Image = []
         self.list_export_image = []
         self.list_export_image_check_button = []
@@ -12,8 +13,8 @@ class User_Image_Gallery_Controller():
         self.image_number = 0
         self.export_image_number = 0
 
-    def read_file(self):
-        #Update images
+    def read_image_file(self):
+        #Read image
         #Update image paths
         image_paths = glob.glob('DataStorage/ImageGallery/*.png')
         #Change folder path format
@@ -35,7 +36,7 @@ class User_Image_Gallery_Controller():
                                                     size = ((int(self.gallery.parent.winfo_width() * 3 / 32),
                                                             int(self.gallery.parent.winfo_height() * 5 / 48)))),
                                 command = lambda imageTk = ImageTk.PhotoImage(Image.open(image_paths[i]).resize((int(self.gallery.parent.winfo_width() * 0.6),
-                                                                                                                int(self.gallery.parent.winfo_height() * 43 / 60)))): self.gallery.button_is_chosen(imageTk))
+                                                                                                                int(self.gallery.parent.winfo_height() * 43 / 60)))): self.gallery.image_is_chosen(imageTk))
                 check_button = ctk.CTkCheckBox(image,
                                                text = '',
                                                width = 15,
@@ -47,6 +48,7 @@ class User_Image_Gallery_Controller():
                 self.list_export_image_check_button.append(check_button)
                 self.list_image_button.append(image)
                 self.list_Image.append(Image.open(image_paths[i]))
+
 
     def export_image(self, index):
         if self.list_export_image_check_button[index].get():

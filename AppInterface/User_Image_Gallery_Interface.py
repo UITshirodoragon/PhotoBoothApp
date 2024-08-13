@@ -7,6 +7,7 @@ if package_controller_path not in sys.path:
     sys.path.append(package_controller_path)
 import customtkinter as ctk
 from PIL import Image, ImageTk
+import glob
 from AppController import User_Image_Gallery_Controller as UIGC
 
 class User_Image_Gallery_Interface(ctk.CTkFrame):
@@ -17,6 +18,14 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.capture_screen = None
         self.parent = parent
         self.current_page = 1
+        #Display image canvas
+        self.display_image_canvas = ctk.CTkCanvas(self,
+                                                  width = int(self.parent.winfo_width() * 0.6),
+                                                  height = int(self.parent.winfo_height() * 43 / 60))
+        self.display_image_canvas.place(relx = 0.05,
+                                        rely = 0.1,
+                                        width = int(self.parent.winfo_width() * 0.6),
+                                        height= int(self.parent.winfo_height() * 43 / 60))
         #Display image canvas
         self.display_image_canvas = ctk.CTkCanvas(self,
                                                   width = int(self.parent.winfo_width() * 0.6),
@@ -45,9 +54,8 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.captured_images_frame.columnconfigure((0 ,1), weight=1, uniform='a')
         self.captured_images_label.grid(row = 0, column = 0, columnspan = 2, sticky = 'nsew')
         self.captured_images_frame.place(relx = 1, rely = 0, relheight=1, relwidth = 0.3, anchor = 'ne')
-    
         #Notify that no images are captured label
-        self.no_image_label = ctk.CTkLabel(self.captured_images_frame,
+        self.no_image_label = ctk.CTkLabel(self.image_tab,
                           text = 'No image captured yet',
                           font = ('Arial', 20))
         self.no_image_is_chosen_label = ctk.CTkLabel(self.display_image_canvas,
@@ -123,38 +131,53 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                                                         command = self.controller.Export_Image)
         export_image_button.place(relx = 0.01, rely = 0.97, anchor = 'sw')
         
-        self.controller.read_file()
+        self.controller.read_image_file()
         if self.controller.image_number != 0:
             #Update image gallery
             self.gallery_images_update()
         else:
-            self.no_image_label.grid(row = 3, column = 0, columnspan = 6, sticky = 'nsew')
+            self.no_image_label.grid(row = 2, column = 0, columnspan = 2, sticky = 'nsew')
+        
 
-    def button_is_chosen(self, imageTk):
+    def export_image(self, index):
+        if self.export_image_check_button[index].get():
+            self.export_image_number += 1
+            self.export_image_label.configure(text = f'You choosed: {self.export_image_number} image')
+            self.list_export_image.append(self.list_Image[index])
+            self.export_image_frame.place(relx = 0, rely = 1, relwidth = 1, relheight = 0.14, anchor = 'sw')
+        else:
+            self.export_image_number -= 1
+            self.list_export_image.remove(self.list_Image[index])
+            if self.export_image_number == 0:
+                self.export_image_frame.place_forget()
+            else:
+                self.export_image_label.configure(text = f'You choosed: {self.export_image_number} image')
+
+    def image_is_chosen(self, imageTk):
         self.no_image_is_chosen_label.place_forget()
         self.display_image_canvas.create_image(0, 0, image = imageTk, anchor = 'nw')
 
     def gallery_images_update(self):
         #Set index and stop number base on forward or backward button pressed
         #Set index number base on current page
-        image_index = self.current_page * 10 - 1
+        image_index = self.current_image_page * 10 - 1
         #Constrain index
         if image_index >= self.controller.image_number:
             image_index = self.controller.image_number - 1
         #Set stop loop number
-        stop_number = (self.current_page - 1) * 10
+        stop_number = (self.current_image_page - 1) * 10
         self.no_image_label.grid_forget()
         #Forget all image in frame
-        for widget in self.captured_images_frame.winfo_children():
+        for widget in self.image_tab.winfo_children():
             if type(widget) is ctk.CTkButton:
                     widget.grid_forget()
-        self.move_forward_button.grid(row = 6, column = 1, sticky = 'nsew')
-        self.move_backward_button.grid(row = 6, column = 0,sticky = 'nsew')
-        for i in range(1, 6):
+        for i in range(0, 5):
             for j in range(0, 2):
                 self.controller.list_image_button[image_index].grid(row = i,
                                                     column = j,
-                                                    sticky='nsew')                                              
+                                                    sticky='nsew',
+                                                    padx=1,
+                                                    pady=1)                                              
                 image_index -= 1
                 if image_index < stop_number:
                     break

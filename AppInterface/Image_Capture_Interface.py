@@ -18,6 +18,9 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.camera_configuration = None
         self.gallery = gallery
         self.start_screen = start_screen
+        
+
+        self.Captured_numbers = 0
         self.parent = parent
         
         self.cap = cv2.VideoCapture(0) # Choose camera
@@ -36,8 +39,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                 relwidth=1,
                                 anchor = 'center',
                                 )
-        
-        
+
         # Capture button
         #Import capture_button.png
         capture_button_image = Image.open('DataStorage/Icon/capture_button.png')
@@ -150,4 +152,5 @@ class Image_Capture_Interface(ctk.CTkFrame):
                 self.camera_configuration.Toggle_Slide()
         self.gallery.pack(expand = True, fill = 'both')
 
+   
         

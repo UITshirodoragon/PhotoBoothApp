@@ -51,7 +51,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 text = '',
                                                 image = self.gif_image_CTk,
                                                 hover_color='gray',
-                                                command = self.controller.swap_capture_mode)
+                                                command = self.swap_capture_mode)
         #Layout capture mode button
         self.capture_mode_button.place(relx = 0.8, rely = 0.5, anchor = 'center')
 
@@ -113,7 +113,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 text = '',
                                                 image = self.countdown_mode_3_imageCTk,
                                                 hover_color='gray',
-                                                command = self.controller.choosing_3)
+                                                command = self.choosing_3)
         self.countdown_mode_5_button = ctk.CTkButton(self.capture_screen.choosing_frame,
                                                 width=60,
                                                 height=60, 
@@ -124,7 +124,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 text = '',
                                                 image = self.countdown_mode_5_imageCTk,
                                                 hover_color='gray',
-                                                command = self.controller.choosing_5)
+                                                command = self.choosing_5)
         self.countdown_mode_10_button = ctk.CTkButton(self.capture_screen.choosing_frame,
                                                 width=60,
                                                 height=60, 
@@ -135,7 +135,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 text = '',
                                                 image = self.countdown_mode_10_imageCTk,
                                                 hover_color='gray',
-                                                command = self.controller.choosing_10)
+                                                command = self.choosing_10)
         self.current_countdown_mode_button_off = ctk.CTkButton(self,
                                                 width=60,
                                                 height=60, 
@@ -146,7 +146,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 text = '',
                                                 image = self.countdown_mode_3_imageCTk,
                                                 hover_color='gray',
-                                                command = self.controller.choosing_countdown_mode)
+                                                command = self.choosing_countdown_mode)
         self.current_countdown_mode_button_on = ctk.CTkButton(self.capture_screen.choosing_frame,
                                                 width=60,
                                                 height=60, 
@@ -157,7 +157,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 text = '',
                                                 image = self.countdown_mode_3_imageCTk,
                                                 hover_color='gray',
-                                                command = self.controller.choosing_countdown_mode)
+                                                command = self.choosing_countdown_mode)
 
         #Layout countdown mode button
         self.current_countdown_mode_button_on.grid(row = 0, column = 0, sticky = 'nsew', padx = 4, pady = 4)
@@ -235,3 +235,48 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
         # Change direction of arrow and toggle_at_start_position value
         self.toggle_button.configure(image = self.toggle_button_imageCTk_down_arrow)
         self.at_start_position = True
+
+    def swap_capture_mode(self):
+        if self.controller.gif_mode:
+            self.controller.gif_mode = False
+            self.capture_mode_button.configure(image = self.capture_screen.capture_button_imageCTk)
+            self.capture_screen.capture_button.configure(image = self.gif_image_CTk)
+        else:
+            self.controller.gif_mode = True
+            self.capture_mode_button.configure(image = self.gif_image_CTk)
+            self.capture_screen.capture_button.configure(image = self.capture_screen.capture_button_imageCTk)
+
+    def choosing_countdown_mode(self):
+        if not self.controller.is_countdown_button_pressed:
+            self.controller.is_countdown_button_pressed = True
+            self.capture_screen.choosing_frame.place(relx=0.2, rely = 0.29, anchor = 'center')
+        else:
+            self.controller.is_countdown_button_pressed = False
+            self.capture_screen.choosing_frame.place_forget()
+
+    def choosing_3(self):
+        self.current_countdown_mode_button_off.configure(image = self.countdown_mode_3_imageCTk)
+        self.current_countdown_mode_button_on.configure(image = self.countdown_mode_3_imageCTk)
+        self.controller.set_countdown_time(3)
+        self.countdown_mode_3_button.grid_forget()
+        self.countdown_mode_5_button.grid(row = 1, column = 0, sticky = 'nsew', padx = 4, pady = 4)
+        self.countdown_mode_10_button.grid(row = 2, column = 0, sticky = 'nsew', padx = 4, pady = 4)
+        self.capture_screen.choosing_frame.place_forget()
+
+    def choosing_5(self):
+        self.current_countdown_mode_button_off.configure(image = self.countdown_mode_5_imageCTk)
+        self.current_countdown_mode_button_on.configure(image = self.countdown_mode_5_imageCTk)
+        self.controller.set_countdown_time(5)
+        self.countdown_mode_5_button.grid_forget()
+        self.countdown_mode_3_button.grid(row = 1, column = 0, sticky = 'nsew', padx = 4, pady = 4)
+        self.countdown_mode_10_button.grid(row = 2, column = 0, sticky = 'nsew', padx = 4, pady = 4)
+        self.capture_screen.choosing_frame.place_forget()
+    
+    def choosing_10(self):
+        self.current_countdown_mode_button_off.configure(image = self.countdown_mode_10_imageCTk)
+        self.current_countdown_mode_button_on.configure(image = self.countdown_mode_10_imageCTk)
+        self.controller.set_countdown_time(10)
+        self.countdown_mode_10_button.grid_forget()
+        self.countdown_mode_3_button.grid(row = 1, column = 0, sticky = 'nsew', padx = 4, pady = 4)
+        self.countdown_mode_5_button.grid(row = 2, column = 0, sticky = 'nsew', padx = 4, pady = 4)
+        self.capture_screen.choosing_frame.place_forget()

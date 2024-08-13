@@ -8,20 +8,24 @@ try:
         pass
 except ImportError as e:
     print(f"Lỗi {e}")
+import customtkinter as ctk
 from PIL import Image, ImageTk
 import time
 import numpy
 
 
 # This class is responsible for controlling image capture
-class Image_Capture_Controller:
+class Image_Capture_Controller():
     # constuctor for init the controller in each interface
     def __init__(self):
+    
         # images are named and identified by numbers
         self.Captured_numbers = 1
         self.camera_ready_state = True
         self.nw_adjust_position_x = None
         self.nw_adjust_position_y = None
+        
+        
         try:
             # camera state is ready or not
             self.camera_ready_state = True
@@ -44,7 +48,7 @@ class Image_Capture_Controller:
                 # self.Picamera.preview_configuration.enable_raw()
                 # self.Picamera.preview_configuration.raw.size = (2560,1500)
                 # self.Picamera.preview_configuration.format = "SBGGR10"
-                self.Picamera.preview_configuration.main.size = (2592, 1944) # set size for preview
+                self.Picamera.preview_configuration.main.size = (1024, 768) # set size for preview
                 self.Picamera.preview_configuration.main.format = "RGB888" # set format color
                 
                 self.Picamera.preview_configuration.align() # set align
@@ -72,9 +76,10 @@ class Image_Capture_Controller:
         elif platform.system() == 'Windows':
             pass
 
-    # get preview frame form camera
+    # get preview frame form camera  
     def preview_frame(self):
         global image_Tk
+        # time_start = time.time()
         try:
             # detec
             if platform.system() == 'Windows':
@@ -98,6 +103,9 @@ class Image_Capture_Controller:
                 
                 # img = self.Picamera.capture_image("lores")
                 image_Tk = ImageTk.PhotoImage(image = img)
+                # time_end = time.time()
+                # time_loop = time_end - time_start
+                # self.fps_realtime = .9 * self.fps_realtime + .1 * (1 / time_loop) 
                 return image_Tk
                 
             else:
@@ -106,7 +114,7 @@ class Image_Capture_Controller:
         except Exception as e:
             # thay the bang log sau
             print(f"Lỗi: {e}")  
-            
+        
     
     def capture_and_save_image(self):
         

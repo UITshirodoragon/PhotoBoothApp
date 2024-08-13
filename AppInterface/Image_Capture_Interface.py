@@ -23,7 +23,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.just_captured_image_path = None
         self.countdown_time = 3
         self.countdown_time_temp = self.countdown_time
-        
+        self.fps_realtime = 0
         #back_end?
         self.parent = parent
         
@@ -61,6 +61,11 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                         font = ('Arial', 40),
                                         fg_color = 'transparent')
 
+
+        self.fps_realtime_label = ctk.CTkLabel(self,
+                                        text = '',
+                                        font = ('Arial', 40),
+                                        fg_color = 'transparent')
         #back-end
         # Capture video from camera
         self.Update_frame()
@@ -75,20 +80,27 @@ class Image_Capture_Interface(ctk.CTkFrame):
         # frame_array = frame
         # img = Image.fromarray(frame_array).resize((self.parent.winfo_width(), self.parent.winfo_height())) # transfer an array to img
         # image_Tk = ImageTk.PhotoImage(image=img)
+        time_start = time.time()
         self.capture_frame.create_image(0,-84, image = self.controller.preview_frame(), anchor = 'nw')
+        self.fps_realtime_label.configure(text = f'{int(self.fps_realtime)}')
+        self.fps_realtime_label.place(relx=0, rely=1, anchor = 'sw')
         self.capture_frame.after(1, self.Update_frame) # Call the Update_Frame() method after every 10 miliseconds
-    #back-end
+        time_end = time.time()
+        time_loop = time_end - time_start
+        self.fps_realtime = .9*self.fps_realtime + .1*(1/time_loop)
+        #back-end
     
     
     
     def Take_Picture(self):
         if self.controller.camera_ready_state == True: 
-            self.Notification_label.configure(text = 'Captured successfully')
+            
             # cv2.imwrite(f'DataStorage/ImageGallery/image{self.Captured_numbers}.png', frame) # Save image
             self.just_captured_image_path = f'DataStorage/ImageGallery/image{self.controller.Captured_numbers}.png'
             self.controller.capture_and_save_image()
             #Tell that an image is captured
             self.is_captured_yet = True
+            self.Notification_label.configure(text = 'Captured successfully')
             
         else:
             self.Notification_label.configure(text = 'Captured unsuccessfully')

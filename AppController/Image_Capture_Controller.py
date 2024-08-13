@@ -48,7 +48,7 @@ class Image_Capture_Controller():
                 # self.Picamera.preview_configuration.enable_raw()
                 # self.Picamera.preview_configuration.raw.size = (2560,1500)
                 # self.Picamera.preview_configuration.format = "SBGGR10"
-                self.Picamera.preview_configuration.main.size = (1024, 768) # set size for preview
+                self.Picamera.preview_configuration.main.size = (2592, 1944) # set size for preview
                 self.Picamera.preview_configuration.main.format = "RGB888" # set format color
                 
                 self.Picamera.preview_configuration.align() # set align

@@ -1,4 +1,5 @@
-from PIL import ImageFont
+from PIL import ImageFont, Image
+import customtkinter as ctk
 from customtkinter import CTkFont
 
 # Fonts define
@@ -12,3 +13,10 @@ COLOR_PINEGREEN = '#24685B'
 COLOR_LION = '#BD8D5F'
 COLOR_SALT = '#F8FCFD'
 COLOR_MINT = '#2FA98C'
+COLOR_BLOODRED = '#690500'
+
+img = Image.open('DataStorage/Icons/right-arrow-solid-24.png')
+RIGHT_ARROW_SOLID = ctk.CTkImage(light_image=img, dark_image=img) 
+
+img = Image.open('DataStorage/Icons/left-arrow-solid-24.png')
+LEFT_ARROW_SOLID = ctk.CTkImage(light_image=img, dark_image=img)

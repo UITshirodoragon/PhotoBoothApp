@@ -7,8 +7,6 @@ if package_controller_path not in sys.path:
     sys.path.append(package_controller_path)
 import customtkinter as ctk
 from PIL import Image
-import Image_Capture_Interface as ICI
-import Get_Started_Interface as GSI
 from AppController import Camera_Configuration_Controller as CCC
 
 class Camera_Configuration_Interface(ctk.CTkFrame):
@@ -211,37 +209,6 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
             self.capture_screen.choosing_frame.place_forget()
             self.Move_Up()
 
-    #Slide animation
-    '''def Move_Down(self):
-            if self.current_position < self.end_position:
-                self.current_position += 0.2
-                self.toggle_button.place(relx = 0.5,
-                                        rely = self.current_position + -self.start_position,
-                                        anchor = 'n')
-                self.place(relx = 0,
-                        rely = self.current_position,
-                        relwidth = 1)
-                self.after(1, self.Move_Down)
-            else:
-                # Change direction of arrow and toggle_at_start_position value
-                self.toggle_button.configure(image = self.toggle_button_imageCTk_up_arrow)
-                self.at_start_position = False
-
-        def Move_Up(self):
-            if self.current_position > self.start_position:
-                self.current_position -= 0.2
-                self.toggle_button.place(relx = 0.5,
-                                        rely = self.current_position + -self.start_position,
-                                        anchor = 'n')
-                self.place(relx = 0,
-                        rely = self.current_position,
-                        relwidth = 1)
-                self.after(1, self.Move_Up)
-            else:
-                # Change direction of arrow and toggle_at_start_position value
-                self.toggle_button.configure(image = self.toggle_button_imageCTk_down_arrow)
-                self.at_start_position = True
-    '''        
     #Pop animation
     def Move_Down(self):
         self.current_position += 0.2

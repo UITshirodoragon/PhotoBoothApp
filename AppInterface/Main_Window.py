@@ -1,26 +1,22 @@
 import customtkinter as ctk
-from PIL import Image, ImageTk
 import Get_Started_Interface as GSI
 import Image_Capture_Interface as ICI
-import User_Image_Gallery_Interface as UIG
+import User_Image_Gallery_Interface as UIGI
 import Get_Started_Interface as GSI
 import Camera_Configuration_Interface as CCI
-        
-def Export_Image():
-       pass
 
 '''Create window'''
 window = ctk.CTk()
 window.title('Photobooth')
 window.resizable(width=False, height=False)
 window.geometry('1024x600')
+window.update()
 window.attributes('-fullscreen', True)
 ctk.set_appearance_mode('light')
 '''Main code'''
-
 '''Interface'''
 start_screen = GSI.Get_Started_Interface(window)
-gallery_screen = UIG.User_Image_Gallery_Interface(window)
+gallery_screen = UIGI.User_Image_Gallery_Interface(window)
 capture_screen = ICI.Image_Capture_Interface(window, gallery_screen, start_screen)
 camera_configuration = CCI.Camera_Configuration_Interface(capture_screen, -0.2, 0)
 

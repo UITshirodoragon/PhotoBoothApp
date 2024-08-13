@@ -22,7 +22,7 @@ class Camera_Configuration_Controller():
     def choosing_countdown_mode(self):
         if not self.is_countdown_button_pressed:
             self.is_countdown_button_pressed = True
-            self.camera_configuration.capture_screen.choosing_frame.place(relx=0.2, rely = 0.2825, anchor = 'center')
+            self.camera_configuration.capture_screen.choosing_frame.place(relx=0.2, rely = 0.29, anchor = 'center')
         else:
             self.is_countdown_button_pressed = False
             self.camera_configuration.capture_screen.choosing_frame.place_forget()

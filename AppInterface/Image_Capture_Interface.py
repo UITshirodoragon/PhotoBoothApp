@@ -8,10 +8,6 @@ if package_controller_path not in sys.path:
 import customtkinter as ctk
 import cv2
 from PIL import Image, ImageTk
-import time
-import User_Image_Gallery_Interface as UIG
-import Get_Started_Interface as GSI
-import Camera_Configuration_Interface as CCI
 from AppController import Image_Capture_Controller as ICC
 
 class Image_Capture_Interface(ctk.CTkFrame):
@@ -62,9 +58,9 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                         command = self.controller.capture_and_update_gallery)
 
         #Layout capture_button
-        self.capture_button.place(relx = 0.95,
+        self.capture_button.place(relx = 1,
                                 rely = 0.5,
-                                anchor = 'center')
+                                anchor = 'e')
 
         # Gallery button
         #Import gallery_button_image.png

@@ -19,17 +19,19 @@ class Image_Capture_Controller():
                 self.capture_screen.camera_configuration.toggle_button.configure(state = 'normal', command = self.capture_screen.camera_configuration.Toggle_Slide)
                 self.capture_screen.Return_start_screen_button.configure(state = 'normal', command = self.capture_screen.back_to_start_screen)
                 captured_image_path = self.just_captured_image_path
-                imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((614, 460))))
+                imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((int(self.capture_screen.parent.winfo_width() * 0.6),
+                                                                                     int(self.capture_screen.parent.winfo_height() * 43 / 60)))))
                 captured_image_button = ctk.CTkButton(self.capture_screen.gallery.captured_images_frame,
                                                         text ='',
-                                                        width=153,
-                                                        height = 100,
+                                                        width = int(self.capture_screen.parent.winfo_width() * 3 / 32),
+                                                        height=int(self.capture_screen.parent.winfo_height() * 5 / 48),
                                                         bg_color='transparent',
                                                         fg_color='transparent',
                                                         hover_color='gray',
                                                         image=ctk.CTkImage(light_image=Image.open(captured_image_path),
                                                                                 dark_image=Image.open(captured_image_path),
-                                                                                size = (153, 100)),
+                                                                                size = ((int(self.capture_screen.parent.winfo_width() * 3 / 32)),
+                                                                                        int(self.capture_screen.parent.winfo_height() * 5 / 48))),
                                                         command = lambda : self.capture_screen.gallery.button_is_chosen(imageTk))
                 check_button = ctk.CTkCheckBox(captured_image_button,
                                                text = '',

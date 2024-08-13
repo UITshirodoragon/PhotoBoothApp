@@ -25,15 +25,17 @@ class User_Image_Gallery_Controller():
             for i in range(self.image_number):
                 image = ctk.CTkButton(self.gallery.captured_images_frame,
                                 text ='',
-                                width= 153,
-                                height = 100,
-                                bg_color='transparent',
+                                width = int(self.gallery.parent.winfo_width() * 3 / 32),
+                                height=int(self.gallery.parent.winfo_height() * 5 / 48),
+                                bg_color='transparent', 
                                 fg_color='transparent',
                                 hover_color='gray',
                                 image=ctk.CTkImage(light_image=Image.open(image_paths[i]),
                                                     dark_image=Image.open(image_paths[i]),
-                                                    size = (153, 100)),
-                                command = lambda imageTk = ImageTk.PhotoImage(Image.open(image_paths[i]).resize((614, 460))): self.gallery.button_is_chosen(imageTk))
+                                                    size = ((int(self.gallery.parent.winfo_width() * 3 / 32),
+                                                            int(self.gallery.parent.winfo_height() * 5 / 48)))),
+                                command = lambda imageTk = ImageTk.PhotoImage(Image.open(image_paths[i]).resize((int(self.gallery.parent.winfo_width() * 0.6),
+                                                                                                                int(self.gallery.parent.winfo_height() * 43 / 60)))): self.gallery.button_is_chosen(imageTk))
                 check_button = ctk.CTkCheckBox(image,
                                                text = '',
                                                width = 15,
@@ -52,11 +54,9 @@ class User_Image_Gallery_Controller():
             self.gallery.export_image_label.configure(text = f'You choosed: {self.export_image_number} image')
             self.list_export_image.append(self.list_Image[index])
             self.gallery.export_image_frame.place(relx = 0, rely = 1, relwidth = 1, relheight = 0.14, anchor = 'sw')
-            print(self.list_export_image)
         else:
             self.export_image_number -= 1
             self.list_export_image.remove(self.list_Image[index])
-            print(self.list_export_image)
             if self.export_image_number == 0:
                 self.gallery.export_image_frame.place_forget()
             else:

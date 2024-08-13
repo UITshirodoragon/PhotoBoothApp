@@ -7,7 +7,6 @@ if package_controller_path not in sys.path:
     sys.path.append(package_controller_path)
 import customtkinter as ctk
 from PIL import Image, ImageTk
-import glob
 from AppController import User_Image_Gallery_Controller as UIGC
 
 class User_Image_Gallery_Interface(ctk.CTkFrame):
@@ -20,12 +19,12 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.current_page = 1
         #Display image canvas
         self.display_image_canvas = ctk.CTkCanvas(self,
-                                                  width = 614,
-                                                  height = 460)
+                                                  width = int(self.parent.winfo_width() * 0.6),
+                                                  height = int(self.parent.winfo_height() * 43 / 60))
         self.display_image_canvas.place(relx = 0.05,
                                         rely = 0.1,
-                                        width = 614,
-                                        height= 460)
+                                        width = int(self.parent.winfo_width() * 0.6),
+                                        height= int(self.parent.winfo_height() * 43 / 60))
         #Create export image frame
         self.export_image_frame = ctk.CTkFrame(self)
         #Create export image label
@@ -36,15 +35,15 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         #Create captured images frame
         self.captured_images_frame = ctk.CTkFrame(self,
                                                    bg_color='black',
-                                                   width=self.parent.winfo_width() * 0.3,
-                                                   height = self.parent.winfo_height()) #main frame
+                                                   width=int(self.parent.winfo_width() * 0.3),
+                                                   height = int(self.parent.winfo_height())) #main frame
         self.captured_images_label = ctk.CTkLabel(self.captured_images_frame,
                                                   text = 'Photos galllery',
                                                   font = ('Arial', 40))
         self.captured_images_frame.rowconfigure((1, 2, 3, 4, 5), weight=2, uniform='a')
         self.captured_images_frame.rowconfigure((0, 6), weight=1, uniform='a')
-        self.captured_images_frame.columnconfigure((0 ,1, 2, 3, 4, 5), weight=1, uniform='a')
-        self.captured_images_label.grid(row = 0, column = 0, columnspan = 6, sticky = 'nsew')
+        self.captured_images_frame.columnconfigure((0 ,1), weight=1, uniform='a')
+        self.captured_images_label.grid(row = 0, column = 0, columnspan = 2, sticky = 'nsew')
         self.captured_images_frame.place(relx = 1, rely = 0, relheight=1, relwidth = 0.3, anchor = 'ne')
     
         #Notify that no images are captured label
@@ -66,11 +65,14 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                                             fg_color='transparent',
                                             bg_color='transparent',
                                             border_width=0,
-                                            text = '',
+                                            text = 'Next',
+                                            text_color='black',
+                                            font = ('Arial', 30),
+                                            compound='right',
                                             hover_color='gray',
                                             image = move_forward_button_imageCTk,
                                             command = self.Move_Forward)
-        self.move_forward_button.grid(row = 6, column = 3, columnspan = 3, sticky = 'nsew')
+        self.move_forward_button.grid(row = 6, column = 1, sticky = 'nsew')
 
         #Move backward button
         #Import right_arrow.png
@@ -83,11 +85,14 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                                             fg_color='transparent',
                                             bg_color='transparent',
                                             border_width=0,
-                                            text = '',
+                                            text = 'Prev',
+                                            text_color='black',
+                                            font = ('Arial', 30),
+                                            compound='left',
                                             hover_color='gray',
                                             image = move_backward_button_imageCTk,
                                             command = self.Move_Backward)
-        self.move_backward_button.grid(row = 6, column = 0, columnspan = 3,sticky = 'nsew')
+        self.move_backward_button.grid(row = 6, column = 0, sticky = 'nsew')
 
          # Return image capture interface
         #Import return_button_image.png
@@ -143,16 +148,13 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         for widget in self.captured_images_frame.winfo_children():
             if type(widget) is ctk.CTkButton:
                     widget.grid_forget()
-        self.move_forward_button.grid(row = 6, column = 3, columnspan = 3, sticky = 'nsew')
-        self.move_backward_button.grid(row = 6, column = 0, columnspan = 3,sticky = 'nsew')
+        self.move_forward_button.grid(row = 6, column = 1, sticky = 'nsew')
+        self.move_backward_button.grid(row = 6, column = 0,sticky = 'nsew')
         for i in range(1, 6):
-            for j in range(0, 4, 3):
+            for j in range(0, 2):
                 self.controller.list_image_button[image_index].grid(row = i,
                                                     column = j,
-                                                    sticky='nsew',
-                                                    columnspan = 3,
-                                                    padx=1,
-                                                    pady=1)                                              
+                                                    sticky='nsew')                                              
                 image_index -= 1
                 if image_index < stop_number:
                     break

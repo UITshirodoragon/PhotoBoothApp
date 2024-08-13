@@ -16,6 +16,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.controller = UIGC.User_Image_Gallery_Controller(self)
         self.camera_configuration = None
         self.capture_screen = None
+        self.template_export = None
         self.parent = parent
         self.current_page = 1
         #Display image canvas
@@ -64,7 +65,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.no_image_is_chosen_label.place(relx = 0.5, rely = 0.5, anchor = 'center')
         #Move forward button
         #Import right_arrow.png
-        move_forward_button_image = Image.open('DataStorage/Icon/right_arrow.png')
+        move_forward_button_image = Image.open('DataStorage/Icons/right_arrow.png')
         move_forward_button_imageCTk = ctk.CTkImage(light_image=move_forward_button_image,
                                                     dark_image=move_forward_button_image,
                                                     size = (50, 50)) 
@@ -84,7 +85,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
 
         #Move backward button
         #Import right_arrow.png
-        move_backward_button_image = Image.open('DataStorage/Icon/left_arrow.png')
+        move_backward_button_image = Image.open('DataStorage/Icons/left_arrow.png')
         move_backward_button_imageCTk = ctk.CTkImage(light_image=move_backward_button_image,
                                                     dark_image=move_backward_button_image,
                                                     size = (50, 50)) 
@@ -104,7 +105,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
 
          # Return image capture interface
         #Import return_button_image.png
-        Return_button_image = Image.open('DataStorage/Icon/return_button_image.png')
+        Return_button_image = Image.open('DataStorage/Icons/return_button_image.png')
         self.Return_button_imageCTk = ctk.CTkImage(light_image=Return_button_image,
                                                 dark_image=Return_button_image)
         #Create Return_button

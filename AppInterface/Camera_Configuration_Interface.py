@@ -23,19 +23,19 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
 
         # Toggle button
         #import down_arrow.png
-        toggle_button_image_down_arrow = Image.open('DataStorage/Icon/down_arrow.png')
+        toggle_button_image_down_arrow = Image.open('DataStorage/Icons/down_arrow.png')
         self.toggle_button_imageCTk_down_arrow = ctk.CTkImage(light_image = toggle_button_image_down_arrow,
                                                                 dark_image = toggle_button_image_down_arrow,
                                                                 size = (20, 15))
         #import up_arrow.png
-        toggle_button_image_up_arrow = Image.open('DataStorage/Icon/up_arrow.png')
+        toggle_button_image_up_arrow = Image.open('DataStorage/Icons/up_arrow.png')
         self.toggle_button_imageCTk_up_arrow = ctk.CTkImage(light_image = toggle_button_image_up_arrow,
                                                                 dark_image = toggle_button_image_up_arrow,
                                                                 size = (20, 15))
 
         #Capture mode button
         #Import gif.png
-        gif_image = Image.open('DataStorage/Icon/gif.png')
+        gif_image = Image.open('DataStorage/Icons/gif.png')
         self.gif_image_CTk = ctk.CTkImage(light_image=gif_image,
                                             dark_image=gif_image,
                                             size = (100, 100))
@@ -60,8 +60,8 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
         self.flash_state = False
 
         #Import flash_on.png and flash_off.png image
-        flash_on_image = Image.open('DataStorage/Icon/flash_on.png')
-        flash_off_image = Image.open('DataStorage/Icon/flash_off.png')
+        flash_on_image = Image.open('DataStorage/Icons/flash_on.png')
+        flash_off_image = Image.open('DataStorage/Icons/flash_off.png')
 
         self.flash_on_imageCTk = ctk.CTkImage(light_image=flash_on_image,
                                             dark_image=flash_on_image,
@@ -87,9 +87,9 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
         self.flash_button.place(relx = 0.5, rely = 0.5, anchor = 'center')
         #Countdown mode frame
         #Import countdown mode image
-        countdown_mode_3_image = Image.open('DataStorage/Icon/set_countdown_3.png')
-        countdown_mode_5_image = Image.open('DataStorage/Icon/set_countdown_5.png')
-        countdown_mode_10_image = Image.open('DataStorage/Icon/set_countdown_10.png')
+        countdown_mode_3_image = Image.open('DataStorage/Icons/set_countdown_3.png')
+        countdown_mode_5_image = Image.open('DataStorage/Icons/set_countdown_5.png')
+        countdown_mode_10_image = Image.open('DataStorage/Icons/set_countdown_10.png')
 
         self.countdown_mode_3_imageCTk = ctk.CTkImage(light_image = countdown_mode_3_image,
                                                         dark_image=countdown_mode_3_image,

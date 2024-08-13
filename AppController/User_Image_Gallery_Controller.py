@@ -65,4 +65,5 @@ class User_Image_Gallery_Controller():
                 self.gallery.export_image_label.configure(text = f'You choosed: {self.export_image_number} image')
 
     def Export_Image(self):
-        pass
+        self.gallery.pack_forget()
+        self.gallery.template_export.pack(expand = True, fill = 'both')

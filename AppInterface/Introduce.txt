@@ -1,2 +1,0 @@
-This is AppInterface folder
-it uses for Interface files

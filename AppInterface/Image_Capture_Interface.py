@@ -18,9 +18,6 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.camera_configuration = None
         self.gallery = gallery
         self.start_screen = start_screen
-        
-
-        self.Captured_numbers = 0
         self.parent = parent
         
         self.cap = cv2.VideoCapture(0) # Choose camera
@@ -31,6 +28,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                             bd = 0,
                                             highlightthickness = 0,
                                             relief = 'ridge')
+        self.capture_frame.place(relx = 0.5, rely = 0.5, anchor = 'center')
         
         #Layout capture_frame
         self.capture_frame.place(relx = 0.5
@@ -42,7 +40,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
 
         # Capture button
         #Import capture_button.png
-        capture_button_image = Image.open('DataStorage/Icon/capture_button.png')
+        capture_button_image = Image.open('DataStorage/Icons/capture_button.png')
         self.capture_button_imageCTk = ctk.CTkImage(light_image=capture_button_image,
                                                 dark_image=capture_button_image,
                                                 size = (100, 100))
@@ -66,7 +64,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
 
         # Gallery button
         #Import gallery_button_image.png
-        gallery_button_image = Image.open('DataStorage/Icon/gallery_button_image.png')
+        gallery_button_image = Image.open('DataStorage/Icons/gallery_button_image.png')
         gallery_button_imageCTk = ctk.CTkImage(light_image=gallery_button_image,
                                                 dark_image=gallery_button_image,
                                                 size = (100, 100))
@@ -90,7 +88,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
 
         # Return to get started interface
         #Import return_button_image.png
-        Return_button_image = Image.open('DataStorage/Icon/return_button_image.png')
+        Return_button_image = Image.open('DataStorage/Icons/return_button_image.png')
         Return_button_imageCTk = ctk.CTkImage(light_image=Return_button_image,
                                                 dark_image=Return_button_image)
         #Create return_button
@@ -118,7 +116,8 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.Notification_label = ctk.CTkLabel(self,
                             text = '',
                             font = ('Arial', 30),
-                            fg_color='transparent')
+                            fg_color='transparent',
+                            bg_color='transparent')
 
        # Countdown label
         self.countdown_label = ctk.CTkLabel(self,
@@ -136,6 +135,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
         frame_array = frame
         img = Image.fromarray(frame_array).resize((self.parent.winfo_width(), self.parent.winfo_height())) # transfer an array to img
         image_Tk = ImageTk.PhotoImage(image=img)
+
         self.capture_frame.create_image(0,0, image = image_Tk, anchor = 'nw')
         self.capture_frame.after(10, self.Update_frame) # Call the Update_Frame() method after every 10 miliseconds
 
@@ -152,5 +152,14 @@ class Image_Capture_Interface(ctk.CTkFrame):
                 self.camera_configuration.Toggle_Slide()
         self.gallery.pack(expand = True, fill = 'both')
 
-   
+    def Countdown(self):
+        if self.controller.countdown_time_temp > 0:            
+            self.countdown_label.configure(text = f'{self.controller.countdown_time_temp}')
+            self.countdown_label.place(relx=0.5, rely=0.5, anchor = 'center')
+            self.controller.countdown_time_temp -= 1
+            self.after(1000, self.Countdown)
+        else:
+            self.countdown_time_temp = self.controller.countdown_time
+            self.countdown_label.place_forget()
+            self.controller.Take_Picture()
         

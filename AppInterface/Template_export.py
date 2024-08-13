@@ -8,175 +8,145 @@ class Template_export(ctk.CTkFrame):
     
      def __init__(self, root):
           super().__init__(root)
-          self.configure(fg_color = COLOR_SALT)
+          self.configure(fg_color = COLOR_MINT)
 
-          header_font = CTkFont(family=HEADER_FONT, size=50)
-          desciption_font = CTkFont(family=DESCRIPTION_FONT, size=30)   
+          header_font = CTkFont(family=HEADER_FONT, size=25)
+          desciption_font = CTkFont(family=DESCRIPTION_FONT, size=27)   
 
-          self.columnconfigure(0, weight=0)
-          self.columnconfigure(1, weight=1)
+          self.columnconfigure(0, weight=1)
+          self.columnconfigure(1, weight=4)
           self.rowconfigure(1, weight=1)
 
           self.template_buttons = []
-          self.image_number_selection = 4
-
-          # create button container 
-          button_container = ctk.CTkFrame(master=self, height=80, fg_color=COLOR_PINEGREEN, corner_radius=0)
-          button_container.grid(column = 0, row = 0, sticky=ctk.NW)
-          button_container.columnconfigure(0, weight=1)
-          button_container.columnconfigure(1, weight=1)
-          button_container.columnconfigure(2, weight=1)
-          button_container.columnconfigure(3, weight=1)
+          self.image_number_selection = 0
 
           # button activity and animation
           def click_button(button):
-               button_1_image.configure(fg_color=COLOR_PINEGREEN, corner_radius=0)
-               button_2_image.configure(fg_color=COLOR_PINEGREEN, corner_radius=0)
-               button_3_image.configure(fg_color=COLOR_PINEGREEN, corner_radius=0)
-               button_4_image.configure(fg_color=COLOR_PINEGREEN, corner_radius=0)
-
-               self.template_buttons = []
-
+               # reset button color
+               template_2grid_btn.configure(fg_color=COLOR_LION)          
+               template_4grid_btn.configure(fg_color=COLOR_LION)          
+               template_6grid_btn.configure(fg_color=COLOR_LION)          
+               template_8grid_btn.configure(fg_color=COLOR_LION)   
+               # set selected button color
                match button:
-                    case 'button1':
-                         button_1_image.configure(fg_color=COLOR_MINT, corner_radius=30)
-                         self.image_number_selection = 1
                     case 'button2':
-                         button_2_image.configure(fg_color=COLOR_MINT, corner_radius=30)
+                         template_2grid_btn.configure(fg_color=COLOR_PINEGREEN)
                          self.image_number_selection = 2
-                    case 'button3':
-                         button_3_image.configure(fg_color=COLOR_MINT, corner_radius=30)
-                         self.image_number_selection = 3
                     case 'button4':
-                         button_4_image.configure(fg_color=COLOR_MINT, corner_radius=30)
+                         template_4grid_btn.configure(fg_color=COLOR_PINEGREEN)
                          self.image_number_selection = 4
+                    case 'button6':
+                         template_6grid_btn.configure(fg_color=COLOR_PINEGREEN)
+                         self.image_number_selection = 6
+                    case 'button8':
+                         template_8grid_btn.configure(fg_color=COLOR_PINEGREEN)
+                         self.image_number_selection = 8
+               text.set(f'{self.image_number_selection} grids\ntemplate')
 
-               for child in template_container.winfo_children():
-                    child.destroy() 
+          # templates container
+          self.template_container = ctk.CTkFrame(master=self, 
+                                            fg_color=COLOR_SALT, 
+                                            width=800, height=520,
+                                            corner_radius=30)
+          self.template_container.grid(column=1, row=0, sticky=ctk.NSEW, pady = (40,0), padx=(0,40))
 
-               # Display template
-               i, j = 0, 0
-               
-               for templates in os.listdir("DataStorage/Templates/Template" + str(self.image_number_selection)+ "image"):
+          #?template container
 
-                    template = Image.open('DataStorage/Templates/Template' + str(self.image_number_selection)+ 'image/' + templates)
-                    template_Img = ctk.CTkImage(light_image=template,
-                                                  dark_image=template,
-                                                  size = (256, 150))
-                    template_button = ctk.CTkButton(master=template_container,
-                                                  text=None,
-                                                  bg_color='transparent',
-                                                  fg_color=COLOR_LION,
-                                                  hover=False,
-                                                  corner_radius=15,
-                                                  image=template_Img,
-                                                  anchor='center',
-                                                  command=lambda i=i, j=j, image=template_Img: select_template(self, i, j, image))
-                    self.template_buttons.append(template_button)
+          # open template
+          template2 = Image.open('DataStorage/Templates/layout2.png')
+          template4 = Image.open('DataStorage/Templates/layout4.png')
+          template6 = Image.open('DataStorage/Templates/layout6.png')
+          template8 = Image.open('DataStorage/Templates/layout8.png')
 
-                    template_button.grid(column=j, row=i, padx=40, pady=40)
-                    
+          template_img2 = ctk.CTkImage(light_image=template2, dark_image=template2, size = (225, 165))
+          template_img4 = ctk.CTkImage(light_image=template4, dark_image=template4, size = (225, 165))
+          template_img6 = ctk.CTkImage(light_image=template6, dark_image=template6, size = (240, 160))
+          template_img8 = ctk.CTkImage(light_image=template8, dark_image=template8, size = (180, 270))
+          #create button
+          template_2grid_btn = ctk.CTkButton(master=self.template_container,    
+                                        text="2 Grids",
+                                        text_color='white',
+                                        font=desciption_font,
+                                        width=230,
+                                        height=200,
+                                        bg_color='transparent',
+                                        fg_color=COLOR_LION,
+                                        hover=False,
+                                        corner_radius=0,
+                                        image=template_img2,
+                                        anchor='center',
+                                        compound='top',
+                                        command=lambda btn="button2": click_button(btn))
+          template_4grid_btn = ctk.CTkButton(master=self.template_container,
+                                        text="4 Grids",
+                                        text_color='white',
+                                        width=230,
+                                        height=200,
+                                        font=desciption_font,
+                                        bg_color='transparent',
+                                        fg_color=COLOR_LION,
+                                        hover=False,
+                                        corner_radius=0,
+                                        image=template_img4,
+                                        anchor='center',
+                                        compound='top',
+                                        command=lambda btn="button4": click_button(btn))
+          template_6grid_btn = ctk.CTkButton(master=self.template_container,
+                                        text="6 Grids",
+                                        text_color='white',
+                                        width=245,
+                                        height=195,
+                                        font=desciption_font,
+                                        bg_color='transparent',
+                                        fg_color=COLOR_LION,
+                                        hover=False,
+                                        corner_radius=0,
+                                        image=template_img6,
+                                        anchor='center',
+                                        compound='top',
+                                        command=lambda btn="button6": click_button(btn))
+          template_8grid_btn = ctk.CTkButton(master=self.template_container,
+                                        text="8 Grids",
+                                        text_color='white',
+                                        width=185,
+                                        height=300,
+                                        font=desciption_font,
+                                        bg_color='transparent',
+                                        fg_color=COLOR_LION,
+                                        hover=False,
+                                        corner_radius=0,
+                                        image=template_img8,
+                                        anchor='center',
+                                        compound='top',
+                                        command=lambda btn="button8": click_button(btn))
+          #place button on template container
+          template_2grid_btn.place(relx=0.05, rely=0.05)
+          template_4grid_btn.place(relx=0.05, rely=0.5)
+          template_6grid_btn.place(relx=0.65, rely=0.05)
+          template_8grid_btn.place(relx=0.38, rely=0.05)
 
-                    if j+1<2:
-                         i,j = i, j+1
-                    else:
-                         i,j = i+1, 0
-
-               
-
-          def select_template(self, i, j, templateImg):
-               for child in information_container.winfo_children():
-                    child.destroy()
-               k, l = 0, 0
-               for templateBtn in self.template_buttons:
-                    if templateBtn.cget("fg_color") == COLOR_MINT:
-                         templateBtn.configure(fg_color = COLOR_LION, state = "active", height=150)  
-                    templateBtn.grid(column = l, row = k, padx=40, pady=40)
-
-                    if l+1<2:
-                         k,l = k, l+1
-                    else:
-                         k,l = k+1, 0
-
-               button = ctk.CTkButton(master=template_container,
-                                                  text=None,
-                                                  height=180,
-                                                  bg_color='transparent',
-                                                  fg_color=COLOR_MINT,
-                                                  hover=False,
-                                                  corner_radius=15,
-                                                  image=templateImg,
-                                                  state="disable",
-                                                  command=lambda i=i, j=j, image=templateImg: select_template(self, i, j, image))
-               button.grid(column=j, row=i, padx=40, pady=25)
-               self.template_buttons[i * 2 + j] = button
-
-               label = ctk.CTkLabel(master=information_container, text=None, image=templateImg)
-               label.pack()
-          # create navigation menu bar
-     
-          button_1_image = ctk.CTkButton(master=button_container,
-                                         width=180,
-                                         height=60,
-                                         text= '1 image',
-                                         font = (desciption_font, 20),
-                                         text_color=COLOR_SALT,
-                                         bg_color='transparent',
-                                         fg_color=COLOR_PINEGREEN,
-                                         hover=False,
-                                         corner_radius=0,
-                                         command=lambda button = 'button1': click_button(button))
- 
-          button_2_image = ctk.CTkButton(master=button_container,
-                                         width=180,
-                                         height=60,
-                                         text= '2 images',
-                                         font = (desciption_font, 20),
-                                         text_color=COLOR_SALT,
-                                         bg_color='transparent',
-                                         fg_color=COLOR_PINEGREEN,
-                                         hover=False,
-                                         corner_radius=0,
-                                         command=lambda button = 'button2': click_button(button))
- 
-          button_3_image = ctk.CTkButton(master=button_container,
-                                         width=180,
-                                         height=60,
-                                         text= '3 images',
-                                         font = (desciption_font, 20),
-                                         text_color=COLOR_SALT,
-                                         bg_color='transparent',
-                                         fg_color=COLOR_PINEGREEN,
-                                         hover=False,
-                                         corner_radius=0,
-                                         command=lambda button = 'button3': click_button(button))
- 
-          button_4_image = ctk.CTkButton(master=button_container,
-                                         width=180,
-                                         height=60,
-                                         text= '4 images',
-                                         font = (desciption_font, 20),
-                                         text_color=COLOR_SALT,
-                                         bg_color='transparent',
-                                         fg_color=COLOR_PINEGREEN,
-                                         hover=False,
-                                         corner_radius=0,
-                                         command=lambda button = 'button4': click_button(button))
-
-          button_1_image.grid(column=0, row=0, sticky=ctk.NW, pady=15, padx=5)
-          button_2_image.grid(column=1, row=0, sticky=ctk.NW, pady=15, padx=5)
-          button_3_image.grid(column=2, row=0, sticky=ctk.NW, pady=15, padx=5)
-          button_4_image.grid(column=3, row=0, sticky=ctk.NW, pady=15, padx=5)
-
-          # template container
-          
-          template_container = ctk.CTkFrame(master=self, fg_color='transparent')
-          template_container.grid(column=0, row=1, sticky=ctk.NSEW)
-          template_container.columnconfigure(0, weight=1)
-          template_container.rowconfigure(0, weight=1)
-
-          
-
-          #information container
+          #?information container
           information_container = ctk.CTkFrame(master=self, fg_color=COLOR_MINT, corner_radius=0)
-          information_container.grid(column=1, row=0, rowspan=2, sticky=ctk.NSEW)
+          information_container.grid(column=0, row=0, rowspan=2, sticky=ctk.NSEW)
+
+          #text
+          label = ctk.CTkLabel(master=information_container,
+                               text="SELECTED",
+                              font=header_font,
+                              text_color=COLOR_PINEGREEN)
+          label.pack(padx=10, pady=(80,20))
+
+          text = ctk.StringVar()
+          text.set('you haven''t\nselected\nanything' )
+          template_selected = ctk.CTkLabel(master=information_container,
+                                           textvariable=text, 
+                                           font=desciption_font,
+                                           text_color=COLOR_PINEGREEN)
+          template_selected.pack()
+
+     def get_template(self):
+          return self.image_number_selection
+     
+     def get_container(self):
+          return self.template_container
+               

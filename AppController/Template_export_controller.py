@@ -1,6 +1,12 @@
 from PIL import Image
+import sys
 import os
-from Template import *
+
+# Đường dẫn tới folder chứa module 
+package_controller_path = os.path.abspath(os.path.join('..', 'PhotoBoothApp'))
+if package_controller_path not in sys.path:
+    sys.path.append(package_controller_path)
+from AppController.Template import *
 
 def export_template(num):
   template = None

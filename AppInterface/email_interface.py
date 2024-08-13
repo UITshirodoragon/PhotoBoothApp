@@ -11,6 +11,7 @@ class Keyboard(ctk.CTkFrame):
     def __init__(self, root, iEntry = None, background = COLOR_SALT, buttoncolor = COLOR_SKYBLUE):
         self.entry = iEntry
         super().__init__(root)
+        
 
         self.configure(fg_color=buttoncolor)
         keys = [
@@ -22,6 +23,10 @@ class Keyboard(ctk.CTkFrame):
             ]
         
         def on_key_press(key):
+            if self.entry.get() == "User email":
+                self.entry.delete(0, 'end')
+                self.entry.configure(text_color=COLOR_PINEGREEN)
+
             current_text = self.entry.get()
             self.entry.delete(0, ctk.END)
             self.entry.insert(0, current_text + key)
@@ -149,7 +154,7 @@ class Email_interface(ctk.CTkFrame):
         email_entry = ctk.CTkEntry(master=entry_container,
                                    font=(DESCRIPTION_FONT, 22),
                                    text_color='#899aab',
-                                   width=250, height=60,
+                                   width=300, height=60,
                                    bg_color=COLOR_SKYBLUE,
                                    fg_color=COLOR_SALT,
                                    corner_radius=20,
@@ -182,12 +187,10 @@ class Email_interface(ctk.CTkFrame):
         name_entry.bind("<FocusIn>", set_name_entry)
         name_entry.bind("<FocusOut>", name_entry_focus_out)
 
-# window = ctk.CTk()
-# window.title('Photobooth')
-# window.geometry('1024x600')
-# window.resizable(width=False, height=False)
-
-# email_screen = Email_interface(window)
-# email_screen.pack(expand = True, fill = 'both')
-
-# window.mainloop()
+        
+    def get_user_email(self):
+        return self.user_email.get()
+    
+    def get_user_name(self):
+        return self.user_name.get()
+    

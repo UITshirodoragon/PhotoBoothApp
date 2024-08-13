@@ -239,12 +239,14 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
     def swap_capture_mode(self):
         if self.controller.gif_mode:
             self.controller.gif_mode = False
-            self.capture_mode_button.configure(image = self.capture_screen.capture_button_imageCTk)
-            self.capture_screen.capture_button.configure(image = self.gif_image_CTk)
-        else:
-            self.controller.gif_mode = True
+            self.capture_screen.capture_button.configure(command = self.capture_screen.controller.capture_and_update_gallery)
             self.capture_mode_button.configure(image = self.gif_image_CTk)
             self.capture_screen.capture_button.configure(image = self.capture_screen.capture_button_imageCTk)
+        else:
+            self.controller.gif_mode = True
+            self.capture_screen.capture_button.configure(command = self.capture_screen.controller.take_gif_and_update_gallery)
+            self.capture_mode_button.configure(image = self.capture_screen.capture_button_imageCTk)
+            self.capture_screen.capture_button.configure(image = self.gif_image_CTk)
 
     def choosing_countdown_mode(self):
         if not self.controller.is_countdown_button_pressed:

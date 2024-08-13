@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from PIL import Image
 import Get_Started_Interface as GSI
 import Image_Capture_Interface as ICI
 import User_Image_Gallery_Interface as UIGI

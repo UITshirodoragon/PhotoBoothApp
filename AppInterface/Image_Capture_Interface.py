@@ -19,8 +19,6 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.gallery = gallery
         self.start_screen = start_screen
         
-
-        self.Captured_numbers = 0
         self.parent = parent
         
         self.cap = cv2.VideoCapture(0) # Choose camera
@@ -32,6 +30,10 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                             highlightthickness = 0,
                                             relief = 'ridge')
         
+        self.Notification_label = ctk.CTkLabel(self,
+                                               text = '',
+                                               font = ('Arial', 40))
+
         #Layout capture_frame
         self.capture_frame.place(relx = 0.5
                                 , rely = 0.5,
@@ -153,4 +155,59 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.gallery.pack(expand = True, fill = 'both')
 
    
+    def Take_gif(self):
+        ret, frame = self.cap.read()
+        if ret == False:
+            self.Notification_label.configure(text = 'Captured unsuccessfully')
+            self.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
+            self.Notification_label.after(500, self.Notification_label.place_forget) # close the nofitication
+        if self.controller.gif_image_count < 75:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+            img = Image.fromarray(frame)
+            self.controller.list_gif_image.append(img)
+            self.controller.gif_image_count += 1
+            self.capture_frame.after(25, self.Take_gif)
+        else:
+            self.gif_image_count = 0
+            self.controller.gif_count += 1
+            self.controller.list_gif_image[0].save(f'DataStorage/GifGallery/Gif{self.controller.gif_count}.gif',
+                                        save_all = True,
+                                        append_images=self.controller.list_gif_image[1:],
+                                        optimize = True,
+                                        duration = 30,
+                                        loop = 0)
+            self.controller.list_gif_image.clear()
+            self.controller.is_captured_yet = True
+            self.Notification_label.configure(text = 'Captured successfully')
+            self.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
+            self.Notification_label.after(500, self.Notification_label.place_forget) # close the nofitication
+            self.controller.just_captured_gif_path = f'DataStorage/GifGallery/Gif{self.controller.gif_count}.gif'
+    def Take_Picture(self):
+        ret, frame = self.cap.read()
+        # Check if image is successfully captured
+        if ret:
+            self.controller.Captured_numbers +=1
+            self.Notification_label.configure(text = 'Captured successfully')
+            cv2.imwrite(f'DataStorage/ImageGallery/image{self.controller.Captured_numbers}.png', frame) # Save image
+            #Tell that an image is captured
+            self.controller.is_captured_yet = True
+            self.controller.just_captured_image_path = f'DataStorage/ImageGallery/image{self.controller.Captured_numbers}.png'
+        else:
+            self.Notification_label.configure(text = 'Captured unsuccessfully')
+        self.Notification_label.place(relx = 0.5, rely = 0.5, anchor = 'center') # layout nofitication
+        self.Notification_label.after(500, self.Notification_label.place_forget) # close the nofitication
+
+    def Countdown(self):
+        if self.controller.countdown_time_temp > 0:            
+            self.countdown_label.configure(text = f'{self.controller.countdown_time_temp}')
+            self.countdown_label.place(relx=0.5, rely=0.5, anchor = 'center')
+            self.controller.countdown_time_temp -= 1
+            self.after(1000, self.Countdown)
+        else:
+            self.controller.countdown_time_temp = self.controller.countdown_time
+            self.countdown_label.place_forget()
+            if self.camera_configuration.controller.gif_mode:
+                self.Take_gif()
+            else:
+                self.Take_Picture()
         

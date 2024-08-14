@@ -21,7 +21,7 @@ from AppController.email_controller import send_email
 
 def change_to_template_edit(prev):
         # call export template function and save in DataStorage/ImageGallery as final.png
-        export_template(template_screen.get_template())
+        template_screen.controller.export_template(template_screen.get_template())
 
         # create template edit interface
         template_edit = TED.Template_edit(window)
@@ -124,7 +124,7 @@ start_screen = GSI.Get_Started_Interface(window)
 gallery_screen = UIGI.User_Image_Gallery_Interface(window)
 capture_screen = ICI.Image_Capture_Interface(window, gallery_screen, start_screen)
 camera_configuration = CCI.Camera_Configuration_Interface(capture_screen, -0.2, 0)
-template_screen = TEX.Template_export(window)
+template_screen = TEX.Template_export(window, gallery_screen)
 
 capture_screen.camera_configuration = camera_configuration
 

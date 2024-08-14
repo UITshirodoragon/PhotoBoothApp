@@ -2,12 +2,22 @@ import customtkinter as ctk
 from customtkinter import CTkFont
 from PIL import ImageFont, Image
 from define import *
+import sys
 import os
+
+# Đường dẫn tới folder chứa module 
+package_controller_path = os.path.abspath(os.path.join('..', 'PhotoBoothApp'))
+if package_controller_path not in sys.path:
+    sys.path.append(package_controller_path)
+from AppController import Template_export_controller
 
 class Template_export(ctk.CTkFrame):
     
-     def __init__(self, root):
+     def __init__(self, root, gallery):
           super().__init__(root)
+          self.gallery = gallery
+          self.controller = Template_export_controller.Template_Export_Controller()
+          self.controller.list_export_image_paths = self.gallery.controller.list_export_image
           self.configure(fg_color = COLOR_MINT)
 
           header_font = CTkFont(family=HEADER_FONT, size=25)

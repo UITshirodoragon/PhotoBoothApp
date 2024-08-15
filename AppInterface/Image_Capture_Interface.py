@@ -19,22 +19,12 @@ class Image_Capture_Interface(ctk.CTkFrame):
     def __init__(self, parent, gallery, start_screen):
          # inherit from CTkFrame
         super().__init__(master = parent)
-        #back-end?
-        self.is_captured_yet = False
-        self.just_captured_image_path = None
-        self.countdown_time = 3
-        self.countdown_time_temp = self.countdown_time
-        self.fps_realtime = 0
-        #back_end?
+
         self.camera_configuration = None
         self.gallery = gallery
         self.start_screen = start_screen
-        
         self.parent = parent
         
-        #back-end
-        # self.cap = cv2.VideoCapture(0) # Choose camera
-        #back-end
         
         #khoa add controller for image capture
         self.controller = Image_Capture_Controller.Image_Capture_Controller(self)
@@ -71,7 +61,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                         text = '',
                                         hover_color='gray',
                                         image = self.capture_button_imageCTk,
-                                        command = self.controller.capture_and_update_gallery)
+                                        command = self.capture_and_update_gallery)
 
         #Layout capture_button
         self.capture_button.place(relx = 1,
@@ -149,24 +139,17 @@ class Image_Capture_Interface(ctk.CTkFrame):
         # Capture video from camera
         self.Update_frame()
         #back-end
-        
+    
+    
         
     #back-end
     def Update_frame(self):
         global image_Tk
-        # _, frame = self.cap.read() # Get frame from camera
-        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) #Convert color system
-        # frame_array = frame
-        # img = Image.fromarray(frame_array).resize((self.parent.winfo_width(), self.parent.winfo_height())) # transfer an array to img
-        # image_Tk = ImageTk.PhotoImage(image=img)
-        time_start = time.time()
-        self.capture_frame.create_image(0,-84, image = self.controller.preview_frame(), anchor = 'nw')
-        self.fps_realtime_label.configure(text = f'{int(self.fps_realtime)}')
+        
+        self.capture_frame.create_image(0,-84, image = self.controller.preview_image(), anchor = 'nw')
+        self.fps_realtime_label.configure(text = f'{int(self.controller.fps_realtime)}')
         self.fps_realtime_label.place(relx=0, rely=1, anchor = 'sw')
-        self.capture_frame.after(1, self.Update_frame) # Call the Update_Frame() method after every 10 miliseconds
-        time_end = time.time()
-        time_loop = time_end - time_start
-        self.fps_realtime = .9*self.fps_realtime + .1*(1/time_loop)
+        self.capture_frame.after(10, self.Update_frame) # Call the Update_Frame() method after every 10 miliseconds
         #back-end
     
     
@@ -178,7 +161,6 @@ class Image_Capture_Interface(ctk.CTkFrame):
             self.just_captured_image_path = f'DataStorage/ImageGallery/image{self.controller.Captured_numbers}.png'
             self.controller.capture_and_save_image()
             #Tell that an image is captured
-            self.is_captured_yet = True
             self.Notification_label.configure(text = 'Captured successfully')
             
         else:
@@ -195,13 +177,13 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.gallery.pack(expand = True, fill = 'both')
 
     def Countdown(self):
-        if self.countdown_time_temp > 0:            
-            self.countdown_label.configure(text = f'{self.countdown_time_temp}')
+        if self.controller.countdown_time_temp > 0:            
+            self.countdown_label.configure(text = f'{self.controller.countdown_time_temp}')
             self.countdown_label.place(relx=0.5, rely=0.5, anchor = 'center')
-            self.countdown_time_temp -= 1
+            self.controller.countdown_time_temp -= 1
             self.after(1000, self.Countdown)
         else:
-            self.countdown_time_temp = self.countdown_time
+            self.controller.countdown_time_temp = self.controller.countdown_time
             self.countdown_label.place_forget()
             self.Take_Picture()
             
@@ -217,3 +199,25 @@ class Image_Capture_Interface(ctk.CTkFrame):
         if self.camera_configuration.at_start_position == False:
                 self.camera_configuration.Toggle_Slide()
         self.gallery.pack(expand = True, fill = 'both')
+
+    def capture_and_update_gallery(self):
+        if self.controller.is_captured_yet:
+                self.controller.is_captured_yet = False
+                #Enable capture button
+                self.capture_button.configure(state = 'normal', command = self.capture_and_update_gallery)
+                self.gallery_button.configure(state = 'normal', command = self.go_to_gallery)
+                self.camera_configuration.toggle_button.configure(state = 'normal', command = self.camera_configuration.Toggle_Slide)
+                self.Return_start_screen_button.configure(state = 'normal', command = self.back_to_start_screen)
+                self.controller.update_image_to_gallery()
+        else:
+                #Disable capture button
+                self.capture_button.configure(state = 'disable', command = None)
+                self.gallery_button.configure(state = 'disable', command = None)
+                self.camera_configuration.toggle_button.configure(state = 'disable', command = None)
+                self.Return_start_screen_button.configure(state = 'disable', command = None)
+                if self.camera_configuration.at_start_position == False:
+                        self.camera_configuration.Toggle_Slide()
+                #Capture
+                self.Countdown()
+                #Wait for image is captured then update gallery
+                self.gallery.after(int((self.controller.countdown_time + 1) * 1000), self.capture_and_update_gallery)

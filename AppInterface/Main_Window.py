@@ -13,7 +13,7 @@ window.resizable(width=False, height=False)
 window.geometry('1024x600')
 window.update()
 if platform.system() == "Linux":
-        window.attributes("-fullscreen", False)
+        window.attributes("-fullscreen", True)
 elif platform.system() == "Windows":
         window.update()
         window.attributes('-fullscreen', True)

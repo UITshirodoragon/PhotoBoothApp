@@ -58,16 +58,16 @@ class Image_Capture_Controller():
                 # self.Picamera.preview_configuration.enable_raw()
                 # self.Picamera.preview_configuration.raw.size = (2560,1500)
                 # self.Picamera.preview_configuration.format = "SBGGR10"
-                self.Picamera.preview_configuration.main.size = (2592, 1944) # set size for preview
-                self.Picamera.preview_configuration.main.format = "XRGB8888" # set format color
-                # self.Picamera.still_configuration.main.size = (2592,1944)
-                # self.Picamera.still_configuration.main.format = "XRGB8888"
+                self.Picamera.preview_configuration.main.size = (1024, 768) # set size for preview
+                self.Picamera.preview_configuration.main.format = "BGR888" # set format color
+                self.Picamera.still_configuration.main.size = (2592,1944)
+                self.Picamera.still_configuration.main.format = "XRGB8888"
                 # self.Picamera.preview_configuration.align() # set align
-                self.Picamera.preview_configuration.enable_lores()
-                self.Picamera.preview_configuration.lores.size = (1024, 768)
-                self.Picamera.preview_configuration.lores.format = "BGR888"
+                # self.Picamera.preview_configuration.enable_lores()
+                # self.Picamera.preview_configuration.lores.size = (1024, 768)
+                # self.Picamera.preview_configuration.lores.format = "BGR888"
                 self.Picamera.preview_configuration.align()
-                # self.Picamera.still_configuration.align()
+                self.Picamera.still_configuration.align()
                 
                 # self.preview_config = self.Picamera.preview_configuration_
                 # self.still_config = self.Picamera.still_configuration_
@@ -96,7 +96,7 @@ class Image_Capture_Controller():
                                             #'StatsOutputEnable': 0, #(False, True, False)
                                             #'AeEnable': False #(False, True, None)
                 
-                self.Picamera.set_controls({'Sharpness': 1.0})
+                self.Picamera.set_controls({'Brightness': 0.05, 'Sharpness': 1.0})
                 
                 self.Picamera.start() # start Pi
 
@@ -141,7 +141,7 @@ class Image_Capture_Controller():
                 
             elif osplatform.system() == 'Linux':
                 
-                frame = self.Picamera.capture_array("lores")
+                frame = self.Picamera.capture_array("main")
                 
                 ##frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
                 frame = cv2.flip(frame, 1)
@@ -179,13 +179,13 @@ class Image_Capture_Controller():
                 
             elif osplatform.system() == 'Linux':
                 
-                image = self.Picamera.capture_array("main")
-                # image_job = self.Picamera.switch_mode_and_capture_array(camera_config="still",
-                #                                                          name= "main",
-                #                                                          wait= False)
+                # image = self.Picamera.capture_array("main")
+                image_job = self.Picamera.switch_mode_and_capture_array(camera_config="still",
+                                                                         name= "main",
+                                                                         wait= False)
                 
-                # # Nhận ảnh
-                # image = self.Picamera.wait(image_job)
+                # Nhận ảnh
+                image = self.Picamera.wait(image_job)
                 # image = self.Picamera.switch_mode_and_capture_array(camera_config="still",
                                                                         # name= "main")
                 # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGBA)

@@ -2,7 +2,6 @@ import customtkinter as ctk
 import Image_Capture_Interface as ICI
 import User_Image_Gallery_Interface as UIGI
 from customtkinter import CTkFont
-from PIL import Image, ImageTk
 import sys
 import os
 
@@ -25,7 +24,6 @@ def change_to_template_edit(prev):
 
         # create template edit interface
         template_edit = TED.Template_edit(window)
-
         # pager button
         back_button = ctk.CTkButton(master=template_edit, 
                         text='Back',
@@ -102,6 +100,7 @@ def change_to_email_inter(prev):
 def back(prev, next):
         prev.pack_forget()
         next.pack(expand = True, fill = 'both')
+
 def eport_template(prev, next):
         prev.get_template()
         prev.pack_forget()

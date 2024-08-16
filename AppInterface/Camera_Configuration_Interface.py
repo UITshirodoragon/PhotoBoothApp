@@ -8,10 +8,11 @@ if package_controller_path not in sys.path:
 import customtkinter as ctk
 from PIL import Image
 from AppController import Camera_Configuration_Controller as CCC
+from define import *
 
 class Camera_Configuration_Interface(ctk.CTkFrame):
     def __init__(self, parent, start_position, end_position):
-        super().__init__(parent, height = abs(start_position - end_position), width = parent.winfo_width())
+        super().__init__(parent, height = abs(start_position - end_position), width = parent.winfo_width(), fg_color=COLOR_PISTACHIO)
         self.parent = parent
         self.controller = CCC.Camera_Configuration_Controller(self)
         self.capture_screen = parent
@@ -45,7 +46,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_PISTACHIO,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -75,7 +76,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                     width=60,
                                     height=60, 
                                     bg_color='transparent',
-                                    fg_color='transparent',
+                                    fg_color=COLOR_PISTACHIO,
                                     border_width=2,
                                     border_color='black',
                                     text = '',
@@ -107,7 +108,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_PISTACHIO,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -118,7 +119,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_PISTACHIO,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -129,7 +130,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_PISTACHIO,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -140,7 +141,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_PISTACHIO,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -151,7 +152,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_PISTACHIO,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -170,10 +171,10 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                         width=60,
                                         height=3,
                                         bg_color='transparent',
-                                        fg_color='transparent',
+                                        fg_color=COLOR_LION,
                                         border_width=0,
                                         text = '',
-                                        hover_color='gray',
+                                        hover_color=COLOR_PINEGREEN,
                                         image = self.toggle_button_imageCTk_down_arrow,
                                         command = self.Toggle_Slide)
         #Layout toggle button

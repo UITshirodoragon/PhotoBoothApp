@@ -9,6 +9,7 @@ import customtkinter as ctk
 import cv2
 from PIL import Image, ImageTk
 from AppController import Image_Capture_Controller as ICC
+from define import *
 
 class Image_Capture_Interface(ctk.CTkFrame):
     def __init__(self, parent, gallery, start_screen):
@@ -93,14 +94,14 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                                 dark_image=Return_button_image)
         #Create return_button
         self.Return_start_screen_button = ctk.CTkButton(self,
-                                        width=50,
-                                        height=50,
-                                        fg_color='transparent',
-                                        bg_color='transparent',
-                                        border_width=0,
-                                        text = '',
-                                        hover_color='gray',
-                                        image = Return_button_imageCTk,
+                                                        width=50,
+                                                        height=50,
+                                                        fg_color=COLOR_LION,
+                                                        bg_color=COLOR_LION,
+                                                        corner_radius=10,
+                                                        text = '',
+                                                        hover_color=COLOR_PINEGREEN,
+                                                        image = LEFT_ARROW_SOLID,
                                         command = self.back_to_start_screen)
         #Layout return_button
         self.Return_start_screen_button.place(relx = 0, 
@@ -132,6 +133,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
         global image_Tk
         _, frame = self.cap.read() # Get frame from camera
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) #Convert color system
+        self.controller.hand_detected_capture(frame)
         frame_array = frame
         img = Image.fromarray(frame_array).resize((self.parent.winfo_width(), self.parent.winfo_height())) # transfer an array to img
         image_Tk = ImageTk.PhotoImage(image=img)

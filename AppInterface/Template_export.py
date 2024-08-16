@@ -29,7 +29,6 @@ class Template_export(ctk.CTkFrame):
 
           self.template_buttons = []
           self.image_number_selection = 0
-
           # button activity and animation
           def click_button(button):
                # reset button color
@@ -137,6 +136,19 @@ class Template_export(ctk.CTkFrame):
 
           #?information container
           information_container = ctk.CTkFrame(master=self, fg_color=COLOR_MINT, corner_radius=0)
+          #Return user gallery button
+          self.Return_user_gallery_button = ctk.CTkButton(information_container,
+                                                            width=50,
+                                                            height=50,
+                                                            fg_color=COLOR_LION,
+                                                            bg_color='transparent',
+                                                            corner_radius=10,
+                                                            text = '',
+                                                            hover_color=COLOR_PINEGREEN,
+                                                            image = LEFT_ARROW_SOLID,
+                                                            command = self.return_user_gallery_interface)
+          self.Return_user_gallery_button.place(relx = 0, 
+                                  rely = 0)
           information_container.grid(column=0, row=0, rowspan=2, sticky=ctk.NSEW)
 
           #text
@@ -159,4 +171,9 @@ class Template_export(ctk.CTkFrame):
      
      def get_container(self):
           return self.template_container
+     
+     def return_user_gallery_interface(self):
+          self.pack_forget()
+          self.gallery.pack(expand = True, fill = 'both')
+     
                

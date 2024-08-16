@@ -1,6 +1,16 @@
 import customtkinter as ctk
 from PIL import Image, ImageTk
 import cv2
+import sys
+import os
+import HandDetector as HD
+# Đường dẫn tới folder chứa module 
+package_controller_path = os.path.abspath(os.path.join('..', 'PhotoBoothApp'))
+if package_controller_path not in sys.path:
+    sys.path.append(package_controller_path)
+from AppInterface.define import *
+
+
 
 class Image_Capture_Controller():
     def __init__(self, capture_screen):
@@ -10,6 +20,8 @@ class Image_Capture_Controller():
         self.countdown_time = 3
         self.countdown_time_temp = self.countdown_time
         self.Captured_numbers = 0
+        self.five_fingers_on = False #Check if 5 fingers are on to ready capture when user close their hand
+        self.handDetector = HD.handDetector(detectionCon=0.55)
     def capture_and_update_gallery(self):
         if self.is_captured_yet:
                 self.is_captured_yet = False
@@ -21,18 +33,18 @@ class Image_Capture_Controller():
                 captured_image_path = self.just_captured_image_path
                 imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((int(self.capture_screen.parent.winfo_width() * 0.6),
                                                                                      int(self.capture_screen.parent.winfo_height() * 43 / 60)))))
-                captured_image_button = ctk.CTkButton(self.capture_screen.gallery.captured_images_frame,
+                captured_image_button = ctk.CTkButton(self.capture_screen.gallery.display_image_button_frame,
                                                         text ='',
                                                         width = int(self.capture_screen.parent.winfo_width() * 3 / 32),
                                                         height=int(self.capture_screen.parent.winfo_height() * 5 / 48),
-                                                        bg_color='transparent',
+                                                        bg_color=COLOR_SALT,
                                                         fg_color='transparent',
-                                                        hover_color='gray',
+                                                        hover_color=COLOR_MINT,
                                                         image=ctk.CTkImage(light_image=Image.open(captured_image_path),
                                                                                 dark_image=Image.open(captured_image_path),
                                                                                 size = ((int(self.capture_screen.parent.winfo_width() * 3 / 32)),
                                                                                         int(self.capture_screen.parent.winfo_height() * 5 / 48))),
-                                                        command = lambda : self.capture_screen.gallery.image_is_chosen(imageTk))
+                                                        command = lambda index = self.capture_screen.gallery.controller.image_number: self.capture_screen.gallery.image_is_chosen(index))
                 check_button = ctk.CTkCheckBox(captured_image_button,
                                                text = '',
                                                width = 15,
@@ -41,6 +53,7 @@ class Image_Capture_Controller():
                                                offvalue= 0,
                                                command = lambda index = self.capture_screen.gallery.controller.image_number: self.capture_screen.gallery.controller.export_image(index))
                 check_button.place(relx = 1, rely = 1, anchor = 'se')
+                self.capture_screen.gallery.controller.list_image_Tk.append(imageTk)
                 self.capture_screen.gallery.controller.list_export_image_check_button.append(check_button)
                 self.capture_screen.gallery.controller.list_Image.append(Image.open(captured_image_path))
                 self.capture_screen.gallery.controller.list_image_button.append(captured_image_button)
@@ -84,3 +97,22 @@ class Image_Capture_Controller():
             self.countdown_time_temp = self.countdown_time
             self.capture_screen.countdown_label.place_forget()
             self.Take_Picture()
+
+    def hand_detected_capture(self, frame):
+        frame = self.handDetector.findHands(frame, draw = False)
+        list_fingers_position = self.handDetector.findPosition(frame, draw = False)
+        finger_id = [4 , 8, 12, 14, 16]
+
+        if len(list_fingers_position) != 0:
+            fingers_number = 0
+            if list_fingers_position[finger_id[0]][1] < list_fingers_position[finger_id[0] - 1][1]:
+                fingers_number += 1
+            for id in range (1, 5):
+                if list_fingers_position[finger_id[id]][2] > list_fingers_position[finger_id[id] - 2][2]:
+                     fingers_number += 1
+        else:
+            return None
+        if fingers_number == 5:
+            self.five_fingers_on = True
+        if self.five_fingers_on and fingers_number == 0:
+            self.capture_and_update_gallery()

@@ -57,7 +57,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
 
         #Flash button  
         #Variable to check if flash are on or off
-        self.flash_state = False
+        
 
         #Import flash_on.png and flash_off.png image
         flash_on_image = Image.open('DataStorage/Icons/flash_on.png')
@@ -180,19 +180,17 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
         self.toggle_button.place(relx = 0.5, rely = self.current_position + -self.start_position, anchor = 'n')
 
     def toggle_flash(self):
-        if self.flash_state:
+        if self.controller.flash_state:
             #Changing flash state to False
-            self.flash_state = False
-
             #Turn off the flash
+            self.controller.turn_off_flash()
 
             #Changing flash icon to off
             self.flash_button.configure(image = self.flash_off_imageCTk)
         else:
-             #Changing flash state to True
-            self.flash_state = True
-
+            #Changing flash state to True
             #Turn on the flash
+            self.controller.turn_on_flash()
 
             #Changing flash icon to on
             self.flash_button.configure(image = self.flash_on_imageCTk)

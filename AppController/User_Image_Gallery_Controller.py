@@ -12,7 +12,7 @@ class User_Image_Gallery_Controller():
         self.list_image_button = []
         self.image_number = 0
         self.export_image_number = 0
-        self.list_image_paths = None
+        self.list_image_paths = []
 
     def read_image_file(self):
         #Read image
@@ -23,6 +23,7 @@ class User_Image_Gallery_Controller():
             path.replace('\\', '/')
         #Get image number
         self.image_number = len(self.list_image_paths)
+        print(self.image_number)
         if self.image_number != 0:
             for i in range(self.image_number):
                 image = ctk.CTkButton(self.gallery.captured_images_frame,

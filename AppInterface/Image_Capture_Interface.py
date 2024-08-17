@@ -20,9 +20,11 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.gallery = gallery
         self.start_screen = start_screen
         self.parent = parent
+
+        #check if user in capture screen, if not stop update frame
+        self.in_capture_screen = False
         
         self.cap = cv2.VideoCapture(0) # Choose camera
-
         # Capture frame
         #Create capture_frame
         self.capture_frame = ctk.CTkCanvas(self,
@@ -50,7 +52,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.capture_button = ctk.CTkButton(self,
                                         width=80,
                                         height=80,
-                                        fg_color='transparent',
+                                        fg_color=COLOR_SALT,
                                         bg_color='transparent',
                                         border_width=0,
                                         text = '',
@@ -75,7 +77,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                         image = gallery_button_imageCTk,
                                         width=80,
                                         height=80,
-                                        fg_color='transparent',
+                                        fg_color=COLOR_SALT,
                                         bg_color='transparent',
                                         border_width=0,
                                         text = '',
@@ -97,7 +99,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
                                                         width=50,
                                                         height=50,
                                                         fg_color=COLOR_LION,
-                                                        bg_color=COLOR_LION,
+                                                        bg_color='transparent',
                                                         corner_radius=10,
                                                         text = '',
                                                         hover_color=COLOR_PINEGREEN,
@@ -131,17 +133,22 @@ class Image_Capture_Interface(ctk.CTkFrame):
 
     def Update_frame(self):
         global image_Tk
-        _, frame = self.cap.read() # Get frame from camera
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) #Convert color system
-        self.controller.hand_detected_capture(frame)
-        frame_array = frame
-        img = Image.fromarray(frame_array).resize((self.parent.winfo_width(), self.parent.winfo_height())) # transfer an array to img
-        image_Tk = ImageTk.PhotoImage(image=img)
-
-        self.capture_frame.create_image(0,0, image = image_Tk, anchor = 'nw')
-        self.capture_frame.after(10, self.Update_frame) # Call the Update_Frame() method after every 10 miliseconds
+        if self.in_capture_screen:
+            _, frame = self.cap.read() # Get frame from camera
+            self.controller.hand_detected_capture(frame)
+            frame = self.controller.face_detector(frame)
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA) #Convert color system
+            frame_array = frame
+            img = Image.fromarray(frame_array).resize((self.parent.winfo_width(), self.parent.winfo_height())) # transfer an array to img
+            image_Tk = ImageTk.PhotoImage(image=img)
+            self.capture_frame.create_image(0,0, image = image_Tk, anchor = 'nw')
+            self.capture_frame.after(25, self.Update_frame) # Call the Update_Frame() method after every 10 miliseconds
+        else:
+            self.cap.read()
+            return None
 
     def back_to_start_screen(self):
+        self.in_capture_screen = False
         if self.camera_configuration.at_start_position == False:
               self.camera_configuration.Toggle_Slide()
         self.pack_forget()
@@ -149,6 +156,7 @@ class Image_Capture_Interface(ctk.CTkFrame):
         self.parent.bind_all('<Button>', self.start_screen.Next_To_Capture_Screen) 
 
     def go_to_gallery(self):
+        self.in_capture_screen = False
         self.pack_forget()
         if self.camera_configuration.at_start_position == False:
                 self.camera_configuration.Toggle_Slide()

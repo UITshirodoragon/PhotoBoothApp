@@ -12,7 +12,7 @@ from define import *
 
 class Camera_Configuration_Interface(ctk.CTkFrame):
     def __init__(self, parent, start_position, end_position):
-        super().__init__(parent, height = abs(start_position - end_position), width = parent.winfo_width(), fg_color=COLOR_PISTACHIO)
+        super().__init__(parent, height = abs(start_position - end_position), width = parent.winfo_width(), fg_color=COLOR_SKYBLUE)
         self.parent = parent
         self.controller = CCC.Camera_Configuration_Controller(self)
         self.capture_screen = parent
@@ -46,7 +46,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color=COLOR_PISTACHIO,
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -76,7 +76,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                     width=60,
                                     height=60, 
                                     bg_color='transparent',
-                                    fg_color=COLOR_PISTACHIO,
+                                    fg_color=COLOR_DOGWOOD,
                                     border_width=2,
                                     border_color='black',
                                     text = '',
@@ -108,7 +108,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color=COLOR_PISTACHIO,
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -119,7 +119,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color=COLOR_PISTACHIO,
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -130,7 +130,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color=COLOR_PISTACHIO,
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -141,7 +141,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color=COLOR_PISTACHIO,
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -152,7 +152,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color=COLOR_PISTACHIO,
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',

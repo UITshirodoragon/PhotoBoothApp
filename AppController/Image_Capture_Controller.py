@@ -3,12 +3,12 @@ from PIL import Image, ImageTk
 import cv2
 import sys
 import os
-import HandDetector as HD
 # Đường dẫn tới folder chứa module 
 package_controller_path = os.path.abspath(os.path.join('..', 'PhotoBoothApp'))
 if package_controller_path not in sys.path:
     sys.path.append(package_controller_path)
 from AppInterface.define import *
+from AppController import HandDetector as HD
 
 
 
@@ -21,7 +21,10 @@ class Image_Capture_Controller():
         self.countdown_time_temp = self.countdown_time
         self.Captured_numbers = 0
         self.five_fingers_on = False #Check if 5 fingers are on to ready capture when user close their hand
-        self.handDetector = HD.handDetector(detectionCon=0.55)
+        self.handDetector = HD.handDetector(detectionCon=0.75)
+        #Load trained model
+        self.net = cv2.dnn.readNetFromCaffe('DataStorage/models/deploy.prototxt.txt',
+                                       'DataStorage/models/res10_300x300_ssd_iter_140000_fp16.caffemodel')
     def capture_and_update_gallery(self):
         if self.is_captured_yet:
                 self.is_captured_yet = False
@@ -101,18 +104,60 @@ class Image_Capture_Controller():
     def hand_detected_capture(self, frame):
         frame = self.handDetector.findHands(frame, draw = False)
         list_fingers_position = self.handDetector.findPosition(frame, draw = False)
-        finger_id = [4 , 8, 12, 14, 16]
 
         if len(list_fingers_position) != 0:
             fingers_number = 0
-            if list_fingers_position[finger_id[0]][1] < list_fingers_position[finger_id[0] - 1][1]:
+            if list_fingers_position[4][1] > list_fingers_position[3][1]:
                 fingers_number += 1
-            for id in range (1, 5):
-                if list_fingers_position[finger_id[id]][2] > list_fingers_position[finger_id[id] - 2][2]:
+            for id in range (8, 21, 4):
+                if list_fingers_position[id][2] < list_fingers_position[id - 2][2]:
                      fingers_number += 1
         else:
             return None
         if fingers_number == 5:
             self.five_fingers_on = True
         if self.five_fingers_on and fingers_number == 0:
+            self.five_fingers_on = False
             self.capture_and_update_gallery()
+    
+    def face_detector(self, frame):
+        coordinate_list = []
+        # Prepare input data
+        blob = cv2.dnn.blobFromImage(frame, 1.0, (300, 300), (104, 177, 123), swapRB = False) # Take a data of a picture to detect
+        ''' frame: your picture
+            1.0 : streching scale
+            (300, 300) : require size of model for input
+            (104, 177, 123) : average color of each pixels
+            swapRB = false : not changing color channel (for here is changing red and blue channel)
+        '''
+
+        # Set data input into net
+        self.net.setInput(blob)
+
+        # Run to detect face
+        faces = self.net.forward()
+        #faces have 4 dimensions, use faces.shape to see: (number of input, number of output, number of face detected, number information of each detected face)
+        '''every detected face have 7 informations in turn is:
+            - image number order
+            - class id (1 or 0): usually is 1 refer to face
+            - confidence of detection
+            - start x
+            - start y
+            - end x
+            - end y
+            * 4 coordinate is scaled in range [0, 1]'''
+        # Get the input picture size
+        h = frame.shape[0] # height
+        w = frame.shape[1] # width
+
+        for i in range(faces.shape[2]):
+            confidence = faces[0, 0, i, 2] #Get the confidence
+            if confidence > 0.4:
+                #Extract coordiante
+                startx = int(faces[0, 0, i, 3] * w)
+                starty = int(faces[0, 0, i, 4] * h)
+                endx = int(faces[0, 0, i, 5] * w)
+                endy = int(faces[0, 0, i, 6] * h)
+                cv2.rectangle(frame, (startx, starty), (endx, endy), ((234, 206, 158))) #Draw a bounding box with color skyblue
+        return frame
+

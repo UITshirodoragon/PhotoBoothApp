@@ -26,7 +26,7 @@ class User_Image_Gallery_Controller():
     def read_image_file(self):
         #Read image
         #Update image paths
-        self.list_image_paths = glob.glob('DataStorage/ImageGallery/*.jpg')
+        self.list_image_paths = glob.glob('DataStorage/ImageGallery/*.png')
         #Change folder path format
         for path in self.list_image_paths:
             path.replace('\\', '/')

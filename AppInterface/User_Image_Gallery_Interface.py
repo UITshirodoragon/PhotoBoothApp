@@ -8,7 +8,7 @@ if package_controller_path not in sys.path:
 import customtkinter as ctk
 from PIL import Image, ImageTk
 from define import *
-import glob
+import cv2
 from AppController import User_Image_Gallery_Controller as UIGC
 
 class User_Image_Gallery_Interface(ctk.CTkFrame):
@@ -64,6 +64,8 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         #Notify that no images are captured label
         self.no_image_label = ctk.CTkLabel(self.captured_images_frame,
                           text = 'No image captured yet',
+                          bg_color= COLOR_SALT,
+                          fg_color=COLOR_SALT,
                           font = ctk.CTkFont(family=DESCRIPTION_FONT, size = 20))
         self.no_image_is_chosen_label = ctk.CTkLabel(self.display_image_canvas,
                           text = 'No image is chosen yet',
@@ -142,7 +144,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
             #Update image gallery
             self.gallery_images_update()
         else:
-            self.no_image_label.grid(row = 2, column = 0, columnspan = 2, sticky = 'nsew')
+            self.no_image_label.grid(row = 3, column = 0, columnspan = 2, sticky = 'nsew')
         
 
     def image_is_chosen(self, index):
@@ -196,11 +198,11 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
     def return_image_capture_interface(self):
         self.no_image_is_chosen_label.place(relx = 0.5, rely = 0.5, anchor = 'center')
         self.display_image_canvas.delete('all')
-        if self.camera_configuration.at_start_position == False:
-              self.camera_configuration.Toggle_Slide()
+        self.capture_screen.in_capture_screen = True
+        self.capture_screen.Update_frame()
         self.pack_forget()
-        self.capture_screen.pack(expand = True, fill = 'both')
         self.camera_configuration.place(relx = 0,
                                     rely = -0.2,
                                     relwidth = 1,
                                     relheight = 0.2)
+        self.capture_screen.pack(expand = True, fill = 'both')

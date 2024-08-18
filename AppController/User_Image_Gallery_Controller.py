@@ -14,8 +14,8 @@ class User_Image_Gallery_Controller():
     def __init__(self, gallery):
         self.gallery = gallery
         #Image variable
-        self.list_Image = []
-        self.list_export_image = []
+        self.list_export_image_button = []
+        self.list_export_image_paths = []
         self.list_export_image_check_button = []
         self.list_image_button = []
         self.list_image_Tk = []
@@ -62,23 +62,30 @@ class User_Image_Gallery_Controller():
                                                                                                         int(self.gallery.parent.winfo_height() * 43 / 60)))))
                 self.list_export_image_check_button.append(check_button)
                 self.list_image_button.append(image)
-                self.list_Image.append(Image.open(self.list_image_paths[i]))
 
 
     def export_image(self, index):
         if self.list_export_image_check_button[index].get():
             self.export_image_number += 1
-            self.gallery.export_image_label.configure(text = f'You choosed: {self.export_image_number} image')
-            self.list_export_image.append(self.list_image_paths[index])
-            self.gallery.export_image_frame.place(relx = 0, rely = 1, relwidth = 1, relheight = 0.14, anchor = 'sw')
+            self.list_export_image_paths.append(self.list_image_paths[index])
+            self.list_export_image_button.append(self.list_image_button[index])
+            self.gallery.confirm_frame.place(relx = 0, rely = 1, relwidth = 1, relheight = 0.14, anchor = 'sw')
         else:
             self.export_image_number -= 1
-            self.list_export_image.remove(self.list_image_paths[index])
+            self.gallery.delete_chosen_image_order()
+            self.list_export_image_paths.remove(self.list_image_paths[index])
+            self.list_export_image_button.remove(self.list_image_button[index])
             if self.export_image_number == 0:
-                self.gallery.export_image_frame.place_forget()
-            else:
-                self.gallery.export_image_label.configure(text = f'You choosed: {self.export_image_number} image')
+                self.gallery.confirm_frame.place_forget()
 
-    def Export_Image(self):
+        self.gallery.update_confirm_frame()
+        self.gallery.update_chosen_image_order()
+
+    def Confirm(self):
+        self.gallery.template_screen.controller.export_template(self.gallery.template_screen.get_template())
         self.gallery.pack_forget()
-        self.gallery.template_export.pack(expand = True, fill = 'both')
+        temp = Image.open('DataStorage/ImageGallery/final.png')
+        w, h = temp.size
+        template_img = ctk.CTkImage(light_image=temp, dark_image=temp, size = (500/h*w, 500))
+        self.gallery.template_edit.display_final_frame.configure(image=template_img)
+        self.gallery.template_edit.pack(expand = True, fill = 'both')

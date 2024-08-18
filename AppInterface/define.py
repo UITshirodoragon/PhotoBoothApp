@@ -1,6 +1,5 @@
 from PIL import ImageFont, Image
 import customtkinter as ctk
-from customtkinter import CTkFont
 
 # Fonts define
 HEADER_FONT = ImageFont.truetype("DataStorage/Fonts/UTM Thanh Nhac TL.ttf", size=50).getname()[0]

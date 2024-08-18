@@ -16,6 +16,7 @@ class Image_Capture_Controller():
     def __init__(self, capture_screen):
         self.capture_screen = capture_screen
         self.is_captured_yet = False
+        self.is_capturing = False #variable for hand detector
         self.just_captured_image_path = None
         self.countdown_time = 3
         self.countdown_time_temp = self.countdown_time
@@ -28,11 +29,12 @@ class Image_Capture_Controller():
     def capture_and_update_gallery(self):
         if self.is_captured_yet:
                 self.is_captured_yet = False
+                self.is_capturing = False
                 #Enable capture button
                 self.capture_screen.capture_button.configure(state = 'normal', command = self.capture_and_update_gallery)
                 self.capture_screen.gallery_button.configure(state = 'normal', command = self.capture_screen.go_to_gallery)
                 self.capture_screen.camera_configuration.toggle_button.configure(state = 'normal', command = self.capture_screen.camera_configuration.Toggle_Slide)
-                self.capture_screen.Return_start_screen_button.configure(state = 'normal', command = self.capture_screen.back_to_start_screen)
+                self.capture_screen.Return_template_screen_button.configure(state = 'normal', command = self.capture_screen.back_to_template_screen)
                 captured_image_path = self.just_captured_image_path
                 imageTk = ImageTk.PhotoImage(Image.open(captured_image_path).resize(((int(self.capture_screen.parent.winfo_width() * 0.6),
                                                                                      int(self.capture_screen.parent.winfo_height() * 43 / 60)))))
@@ -50,6 +52,10 @@ class Image_Capture_Controller():
                                                         command = lambda index = self.capture_screen.gallery.controller.image_number: self.capture_screen.gallery.image_is_chosen(index))
                 check_button = ctk.CTkCheckBox(captured_image_button,
                                                text = '',
+                                               hover_color=COLOR_SKYBLUE,
+                                               bg_color='transparent',
+                                               checkmark_color=COLOR_PINEGREEN,
+                                               fg_color=COLOR_MINT,
                                                width = 15,
                                                height= 15,
                                                onvalue= 1,
@@ -58,7 +64,7 @@ class Image_Capture_Controller():
                 check_button.place(relx = 1, rely = 1, anchor = 'se')
                 self.capture_screen.gallery.controller.list_image_Tk.append(imageTk)
                 self.capture_screen.gallery.controller.list_export_image_check_button.append(check_button)
-                self.capture_screen.gallery.controller.list_Image.append(Image.open(captured_image_path))
+                self.capture_screen.gallery.controller.list_image_paths.append(captured_image_path)
                 self.capture_screen.gallery.controller.list_image_button.append(captured_image_button)
                 self.capture_screen.gallery.controller.image_number += 1
                 self.capture_screen.gallery.gallery_images_update()
@@ -67,9 +73,10 @@ class Image_Capture_Controller():
                 self.capture_screen.capture_button.configure(state = 'disable', command = None)
                 self.capture_screen.gallery_button.configure(state = 'disable', command = None)
                 self.capture_screen.camera_configuration.toggle_button.configure(state = 'disable', command = None)
-                self.capture_screen.Return_start_screen_button.configure(state = 'disable', command = None)
+                self.capture_screen.Return_template_screen_button.configure(state = 'disable', command = None)
                 if self.capture_screen.camera_configuration.at_start_position == False:
                         self.capture_screen.camera_configuration.Toggle_Slide()
+                self.is_capturing = True
                 #Capture
                 self.Countdown()
                 #Wait for image is captured then update gallery
@@ -107,11 +114,14 @@ class Image_Capture_Controller():
 
         if len(list_fingers_position) != 0:
             fingers_number = 0
-            if list_fingers_position[4][1] > list_fingers_position[3][1]:
-                fingers_number += 1
-            for id in range (8, 21, 4):
-                if list_fingers_position[id][2] < list_fingers_position[id - 2][2]:
-                     fingers_number += 1
+            if list_fingers_position[8][1] > list_fingers_position[12][1]:
+                if list_fingers_position[4][1] > list_fingers_position[3][1]:
+                    fingers_number += 1
+                for id in range (8, 21, 4):
+                    if list_fingers_position[id][2] < list_fingers_position[id - 2][2]:
+                        fingers_number += 1
+            else:
+                return None
         else:
             return None
         if fingers_number == 5:

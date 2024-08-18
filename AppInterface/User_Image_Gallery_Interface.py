@@ -17,7 +17,8 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.controller = UIGC.User_Image_Gallery_Controller(self)
         self.camera_configuration = None
         self.capture_screen = None
-        self.template_export = None
+        self.template_edit = None
+        self.template_screen = None
         self.parent = parent
         self.current_page = 1
         #Display image canvas
@@ -37,12 +38,13 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                                         width = int(self.parent.winfo_width() * 0.6),
                                         height= int(self.parent.winfo_height() * 43 / 60))
         #Create export image frame
-        self.export_image_frame = ctk.CTkFrame(self)
+        self.confirm_frame = ctk.CTkFrame(self,
+                                          fg_color=COLOR_SALT)
         #Create export image label
-        self.export_image_label = ctk.CTkLabel(self.export_image_frame,
+        self.confirm_label = ctk.CTkLabel(self.confirm_frame,
                                                text = '',
                                                font = ctk.CTkFont(family = DESCRIPTION_FONT, size = 20))
-        self.export_image_label.place(relx = 0.01, rely = 0)
+        self.confirm_label.place(relx = 0.01, rely = 0)
         #Create captured images frame
         self.captured_images_frame = ctk.CTkFrame(self,
                                                    fg_color=COLOR_PINEGREEN,
@@ -72,11 +74,6 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                           font = ctk.CTkFont(family=DESCRIPTION_FONT, size = 20))
         self.no_image_is_chosen_label.place(relx = 0.5, rely = 0.5, anchor = 'center')
         #Move forward button
-        #Import right_arrow.png
-        move_forward_button_image = Image.open('DataStorage/Icons/right_arrow.png')
-        move_forward_button_imageCTk = ctk.CTkImage(light_image=move_forward_button_image,
-                                                    dark_image=move_forward_button_image,
-                                                    size = (50, 50)) 
         #Create move forward button
         self.move_forward_button = ctk.CTkButton(self.captured_images_frame,
                                             fg_color=COLOR_LION,
@@ -85,18 +82,13 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                                             hover_color=COLOR_PINEGREEN,
                                             text = 'Next',
                                             text_color='#ffffff',
-                                            font = CTkFont(family=HEADER_FONT, size=22),
+                                            font = ctk.CTkFont(family=HEADER_FONT, size=22),
                                             compound='right',
                                             image = RIGHT_ARROW_SOLID,
                                             command = self.Move_Forward)
         self.move_forward_button.grid(row = 6, column = 1, sticky = 'nsew')
 
         #Move backward button
-        #Import right_arrow.png
-        move_backward_button_image = Image.open('DataStorage/Icons/left_arrow.png')
-        move_backward_button_imageCTk = ctk.CTkImage(light_image=move_backward_button_image,
-                                                    dark_image=move_backward_button_image,
-                                                    size = (50, 50)) 
         #Create move backward button
         self.move_backward_button = ctk.CTkButton(self.captured_images_frame,
                                             fg_color=COLOR_LION,
@@ -105,7 +97,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                                             hover_color=COLOR_PINEGREEN,
                                             text = 'Prev',
                                             text_color='#ffffff',
-                                            font = CTkFont(family=HEADER_FONT, size=22),
+                                            font = ctk.CTkFont(family=HEADER_FONT, size=22),
                                             compound='left',
                                             image = LEFT_ARROW_SOLID,
                                             command = self.Move_Backward)
@@ -130,15 +122,19 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
         self.Return_image_capture_button.place(relx = 0, 
                                   rely = 0)
         
-        #Create export image button
-        export_image_button = ctk.CTkButton(self.export_image_frame,
-                                                        text = 'Export',
-                                                        width = 100,
-                                                        height=40,
-                                                        corner_radius= 30,
-                                                        font = ('Arial', 20),
-                                                        command = self.controller.Export_Image)
-        export_image_button.place(relx = 0.01, rely = 0.97, anchor = 'sw')
+        #Create confirm button
+        self.confirm_button = ctk.CTkButton(self.confirm_frame,
+                                                text = 'Confirm',
+                                                width = 100,
+                                                height=40,
+                                                corner_radius= 30,
+                                                fg_color = 'gray',
+                                                text_color='white',
+                                                image=RIGHT_ARROW_SOLID,
+                                                compound='right',
+                                                font = ctk.CTkFont(family=HEADER_FONT, size=22),
+                                                state='disable')
+        self.confirm_button.place(relx = 0.01, rely = 0.95, anchor = 'sw')
         self.controller.read_image_file()
         if self.controller.image_number != 0:
             #Update image gallery
@@ -206,3 +202,35 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
                                     relwidth = 1,
                                     relheight = 0.2)
         self.capture_screen.pack(expand = True, fill = 'both')
+    
+    def update_confirm_frame(self):
+        self.confirm_label.configure(text = f'You choosed: {self.controller.export_image_number}/{self.template_screen.image_number_selection} images')
+        if self.controller.export_image_number == self.template_screen.image_number_selection:
+            self.confirm_label.configure(text_color = COLOR_FROG)
+            self.confirm_button.configure(fg_color = COLOR_LION, hover_color = COLOR_PINEGREEN, command = self.controller.Confirm, state = 'normal')
+            for check_button in self.controller.list_export_image_check_button:
+                if check_button.get() == False:
+                    check_button.configure(state = 'disable', command = None)
+        else:
+            self.confirm_label.configure(text_color = COLOR_BLOODRED)
+            self.confirm_button.configure(fg_color = 'gray', command = None, state = 'disable')
+            for i in range(len(self.controller.list_export_image_check_button)):
+                self.controller.list_export_image_check_button[i].configure(state = 'normal', command = lambda index = i: self.controller.export_image(index))
+
+
+    def delete_chosen_image_order(self):
+        for button in self.controller.list_export_image_button:
+            for label in button.winfo_children():
+                if type(label) == ctk.CTkLabel:
+                    label.place_forget()
+
+    def update_chosen_image_order(self):
+        for i in range(len(self.controller.list_export_image_button)):
+            ctk.CTkLabel(self.controller.list_export_image_button[i],
+                            text = f'{i + 1}',
+                            width = 20,
+                            height=10,
+                            fg_color='transparent',
+                            bg_color='transparent',
+                            anchor = 'n',
+                            font = ctk.CTkFont(family=DESCRIPTION_FONT, size = 25)).place(relx = 0.5, rely = 0.5, anchor = 'center')

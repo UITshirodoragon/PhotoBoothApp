@@ -2,7 +2,6 @@ import customtkinter as ctk
 
 class Camera_Configuration_Controller():
     def __init__(self, camera_configuration):
-        self.gif_mode = False
         self.camera_configuration = camera_configuration
         #Variable to check if the button is pressed or not
         self.is_countdown_button_pressed = False

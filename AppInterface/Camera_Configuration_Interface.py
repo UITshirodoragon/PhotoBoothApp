@@ -8,10 +8,11 @@ if package_controller_path not in sys.path:
 import customtkinter as ctk
 from PIL import Image
 from AppController import Camera_Configuration_Controller as CCC
+from define import *
 
 class Camera_Configuration_Interface(ctk.CTkFrame):
     def __init__(self, parent, start_position, end_position):
-        super().__init__(parent, height = abs(start_position - end_position), width = parent.winfo_width())
+        super().__init__(parent, height = abs(start_position - end_position), width = parent.winfo_width(), fg_color=COLOR_SKYBLUE)
         self.parent = parent
         self.controller = CCC.Camera_Configuration_Controller(self)
         self.capture_screen = parent
@@ -22,20 +23,8 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
         self.at_start_position = True
 
         # Toggle button
-        #import down_arrow.png
-        toggle_button_image_down_arrow = Image.open('DataStorage/Icon/down_arrow.png')
-        self.toggle_button_imageCTk_down_arrow = ctk.CTkImage(light_image = toggle_button_image_down_arrow,
-                                                                dark_image = toggle_button_image_down_arrow,
-                                                                size = (20, 15))
-        #import up_arrow.png
-        toggle_button_image_up_arrow = Image.open('DataStorage/Icon/up_arrow.png')
-        self.toggle_button_imageCTk_up_arrow = ctk.CTkImage(light_image = toggle_button_image_up_arrow,
-                                                                dark_image = toggle_button_image_up_arrow,
-                                                                size = (20, 15))
-
-        #Capture mode button
         #Import gif.png
-        gif_image = Image.open('DataStorage/Icon/gif.png')
+        gif_image = Image.open('DataStorage/Icons/gif.png')
         self.gif_image_CTk = ctk.CTkImage(light_image=gif_image,
                                             dark_image=gif_image,
                                             size = (100, 100))
@@ -45,7 +34,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -60,8 +49,8 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
         self.flash_state = False
 
         #Import flash_on.png and flash_off.png image
-        flash_on_image = Image.open('DataStorage/Icon/flash_on.png')
-        flash_off_image = Image.open('DataStorage/Icon/flash_off.png')
+        flash_on_image = Image.open('DataStorage/Icons/flash_on.png')
+        flash_off_image = Image.open('DataStorage/Icons/flash_off.png')
 
         self.flash_on_imageCTk = ctk.CTkImage(light_image=flash_on_image,
                                             dark_image=flash_on_image,
@@ -75,7 +64,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                     width=60,
                                     height=60, 
                                     bg_color='transparent',
-                                    fg_color='transparent',
+                                    fg_color=COLOR_DOGWOOD,
                                     border_width=2,
                                     border_color='black',
                                     text = '',
@@ -87,9 +76,9 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
         self.flash_button.place(relx = 0.5, rely = 0.5, anchor = 'center')
         #Countdown mode frame
         #Import countdown mode image
-        countdown_mode_3_image = Image.open('DataStorage/Icon/set_countdown_3.png')
-        countdown_mode_5_image = Image.open('DataStorage/Icon/set_countdown_5.png')
-        countdown_mode_10_image = Image.open('DataStorage/Icon/set_countdown_10.png')
+        countdown_mode_3_image = Image.open('DataStorage/Icons/set_countdown_3.png')
+        countdown_mode_5_image = Image.open('DataStorage/Icons/set_countdown_5.png')
+        countdown_mode_10_image = Image.open('DataStorage/Icons/set_countdown_10.png')
 
         self.countdown_mode_3_imageCTk = ctk.CTkImage(light_image = countdown_mode_3_image,
                                                         dark_image=countdown_mode_3_image,
@@ -107,7 +96,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -118,7 +107,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -129,7 +118,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -140,7 +129,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -151,7 +140,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                                 width=60,
                                                 height=60, 
                                                 bg_color='transparent',
-                                                fg_color='transparent',
+                                                fg_color=COLOR_DOGWOOD,
                                                 border_width=2,
                                                 border_color='black',
                                                 text = '',
@@ -170,11 +159,11 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                                         width=60,
                                         height=3,
                                         bg_color='transparent',
-                                        fg_color='transparent',
+                                        fg_color=COLOR_LION,
                                         border_width=0,
                                         text = '',
-                                        hover_color='gray',
-                                        image = self.toggle_button_imageCTk_down_arrow,
+                                        hover_color=COLOR_PINEGREEN,
+                                        image = DOWN_ARROW_SOLID,
                                         command = self.Toggle_Slide)
         #Layout toggle button
         self.toggle_button.place(relx = 0.5, rely = self.current_position + -self.start_position, anchor = 'n')
@@ -220,7 +209,7 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                     relwidth = 1,
                     relheight = abs(self.start_position - self.end_position))
         # Change direction of arrow and toggle_at_start_position value
-        self.toggle_button.configure(image = self.toggle_button_imageCTk_up_arrow)
+        self.toggle_button.configure(image = UP_ARROW_SOLID)
         self.at_start_position = False
 
     def Move_Up(self):
@@ -233,17 +222,17 @@ class Camera_Configuration_Interface(ctk.CTkFrame):
                     relwidth = 1,
                     relheight = abs(self.start_position - self.end_position))
         # Change direction of arrow and toggle_at_start_position value
-        self.toggle_button.configure(image = self.toggle_button_imageCTk_down_arrow)
+        self.toggle_button.configure(image = DOWN_ARROW_SOLID)
         self.at_start_position = True
 
     def swap_capture_mode(self):
-        if self.controller.gif_mode:
-            self.controller.gif_mode = False
+        if self.capture_screen.controller.gif_mode:
+            self.capture_screen.controller.gif_mode = False
             self.capture_screen.capture_button.configure(command = self.capture_screen.controller.capture_and_update_gallery)
             self.capture_mode_button.configure(image = self.gif_image_CTk)
             self.capture_screen.capture_button.configure(image = self.capture_screen.capture_button_imageCTk)
         else:
-            self.controller.gif_mode = True
+            self.capture_screen.controller.gif_mode = True
             self.capture_screen.capture_button.configure(command = self.capture_screen.controller.take_gif_and_update_gallery)
             self.capture_mode_button.configure(image = self.capture_screen.capture_button_imageCTk)
             self.capture_screen.capture_button.configure(image = self.gif_image_CTk)

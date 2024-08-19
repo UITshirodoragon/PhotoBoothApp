@@ -47,6 +47,7 @@ class Get_Started_Interface(ctk.CTkFrame):
 import customtkinter as ctk
 from PIL import ImageFont, Image
 from define import *
+from customtkinter import CTkFont
 
 class Get_Started_Interface(ctk.CTkFrame):
     
@@ -55,7 +56,8 @@ class Get_Started_Interface(ctk.CTkFrame):
         self.configure(fg_color = COLOR_SALT)
         self.parent = root
         header_font = CTkFont(family=HEADER_FONT, size=50)
-        desciption_font = CTkFont(family=DESCRIPTION_FONT, size=30)   
+        desciption_font = CTkFont(family=DESCRIPTION_FONT, size=30)  
+        self.template_screen = None 
 
         frame = ctk.CTkFrame(self, 
                              bg_color=COLOR_SALT, 
@@ -114,11 +116,7 @@ class Get_Started_Interface(ctk.CTkFrame):
                                command=change_page)
         button. pack()
 
-    def Next_To_Capture_Screen(self, event):
+    def Next_To_Template_Screen(self, event):
         self.parent.unbind_all('<Button>')
         self.pack_forget()
-        self.capture_screen.pack(expand = True, fill = 'both')
-        self.camera_configuration.place(relx = 0,
-                                    rely = -0.2,
-                                    relwidth = 1,
-                                    relheight = 0.2)
+        self.template_screen.pack(expand = True, fill = 'both')

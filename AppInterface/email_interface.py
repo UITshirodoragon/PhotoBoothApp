@@ -105,11 +105,12 @@ class Keyboard(ctk.CTkFrame):
         self.entry = entry
 
 class Email_interface(ctk.CTkFrame):
-    def __init__(self, root):
+    def __init__(self, root, template_edit):
         super().__init__(root)
         self.configure(fg_color=COLOR_SKYBLUE)
         self.user_name = ctk.StringVar()
         self.user_email = ctk.StringVar()
+        self.template_edit = template_edit
 
         def set_email_entry(event):
             keyboard.set_current_entry(event.widget)
@@ -174,6 +175,39 @@ class Email_interface(ctk.CTkFrame):
                                    border_width=5, 
                                    textvariable=self.user_name, )
         name_entry.pack(side='left', pady =(20,40), padx=40)
+
+         # button
+        back_button = ctk.CTkButton(master=self, 
+                        text='Back',
+                        text_color="#ffffff",
+                        height=60,
+                        font=CTkFont(family=HEADER_FONT, size=22),
+                        bg_color='transparent',
+                        fg_color='#BD8D5F',
+                        image=LEFT_ARROW_SOLID,
+                        hover=False,
+                        anchor='center',
+                        compound='left',
+                        corner_radius=30,
+                        command=self.return_template_edit)
+        back_button.place(relx=0.02, rely=0.9)
+
+        submit_button = ctk.CTkButton(master=self, 
+                                text='SUBMIT',
+                                text_color="#ffffff",
+                                height=60,
+                                font=CTkFont(family=HEADER_FONT, size=20),
+                                bg_color='transparent',
+                                fg_color=COLOR_BLOODRED,
+                                image=RIGHT_ARROW_SOLID,
+                                hover=False,
+                                anchor='center',
+                                compound='right',
+                                corner_radius=30,
+                                command=lambda email=self.get_user_email, 
+                                name=self.get_user_name: send_email(email, name))
+        submit_button.place(relx=0.8, rely=0.9)
+
             
         #? create entry container
         keyboard = Keyboard(root=self, iEntry=email_entry)
@@ -193,4 +227,8 @@ class Email_interface(ctk.CTkFrame):
     
     def get_user_name(self):
         return self.user_name.get()
+    
+    def return_template_edit(self):
+        self.pack_forget()
+        self.template_edit.pack(expand = True, fill = 'both')
     

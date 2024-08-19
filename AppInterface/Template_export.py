@@ -13,11 +13,15 @@ from AppController import Template_export_controller
 
 class Template_export(ctk.CTkFrame):
     
-     def __init__(self, root, gallery):
+     def __init__(self, root, start_screen, gallery, capture_screen, camera_configuration):
           super().__init__(root)
+          self.parent = root
+          self.start_screen = start_screen
           self.gallery = gallery
+          self.capture_screen = capture_screen
+          self.camera_configuration = camera_configuration
           self.controller = Template_export_controller.Template_Export_Controller()
-          self.controller.list_export_image_paths = self.gallery.controller.list_export_image
+          self.controller.list_export_image_paths = self.gallery.controller.list_export_image_paths
           self.configure(fg_color = COLOR_MINT)
 
           header_font = CTkFont(family=HEADER_FONT, size=25)
@@ -29,7 +33,6 @@ class Template_export(ctk.CTkFrame):
 
           self.template_buttons = []
           self.image_number_selection = 0
-
           # button activity and animation
           def click_button(button):
                # reset button color
@@ -52,6 +55,8 @@ class Template_export(ctk.CTkFrame):
                          template_8grid_btn.configure(fg_color=COLOR_PINEGREEN)
                          self.image_number_selection = 8
                text.set(f'{self.image_number_selection} grids\ntemplate')
+               self.Notification.place_forget()
+               self.gallery.update_confirm_frame()
 
           # templates container
           self.template_container = ctk.CTkFrame(master=self, 
@@ -137,7 +142,41 @@ class Template_export(ctk.CTkFrame):
 
           #?information container
           information_container = ctk.CTkFrame(master=self, fg_color=COLOR_MINT, corner_radius=0)
+          #Return start screen button
+          self.Return_start_screen_button = ctk.CTkButton(information_container,
+                                                            width=50,
+                                                            height=50,
+                                                            fg_color=COLOR_LION,
+                                                            bg_color='transparent',
+                                                            corner_radius=10,
+                                                            text = '',
+                                                            hover_color=COLOR_PINEGREEN,
+                                                            image = LEFT_ARROW_SOLID,
+                                                            command = self.return_get_started_interface)
+          self.Return_start_screen_button.place(relx = 0, 
+                                  rely = 0)
           information_container.grid(column=0, row=0, rowspan=2, sticky=ctk.NSEW)
+
+          #Forgot choosing template label
+          self.Notification = ctk.CTkLabel(self.template_container,
+                                           text = 'You forgot to choose template',
+                                           text_color= COLOR_BLOODRED,
+                                           font = CTkFont(family=DESCRIPTION_FONT, size=20))
+          # open arrow icon for next button, change to template edit
+          next_button = ctk.CTkButton(master=self.template_container, 
+                              text='NEXT',
+                              text_color="#ffffff",
+                              height=60,
+                              font=CTkFont(family=HEADER_FONT, size=22),
+                              bg_color='transparent',
+                              fg_color='#BD8D5F',
+                              image=RIGHT_ARROW_SOLID,
+                              hover=False,
+                              anchor='center',
+                              compound='right',
+                              corner_radius=30,
+                              command=self.next_to_capture_screen)
+          next_button.place(relx=0.75, rely=0.85)
 
           #text
           label = ctk.CTkLabel(master=information_container,
@@ -147,16 +186,31 @@ class Template_export(ctk.CTkFrame):
           label.pack(padx=10, pady=(80,20))
 
           text = ctk.StringVar()
-          text.set('you haven''t\nselected\nanything' )
+          text.set('you haven'+ "'t"+ '\nselected\nanything' )
           template_selected = ctk.CTkLabel(master=information_container,
                                            textvariable=text, 
                                            font=desciption_font,
                                            text_color=COLOR_PINEGREEN)
           template_selected.pack()
+          
 
      def get_template(self):
           return self.image_number_selection
      
      def get_container(self):
           return self.template_container
+     
+     def return_get_started_interface(self):
+          self.pack_forget()
+          self.parent.bind_all('<Button>', self.start_screen.Next_To_Template_Screen)
+          self.start_screen.pack(expand = True, fill = 'both')
+     
+     def next_to_capture_screen(self):
+          if self.image_number_selection == 0:
+               self.Notification.place(relx = 0.7, rely = 0.78)
+               return None
+          self.capture_screen.in_capture_screen = True
+          self.capture_screen.Update_frame()
+          self.pack_forget()
+          self.capture_screen.pack(expand = True, fill = 'both')
                

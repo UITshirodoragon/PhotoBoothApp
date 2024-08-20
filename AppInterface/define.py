@@ -3,7 +3,7 @@ import customtkinter as ctk
 
 # Fonts define
 HEADER_FONT = ImageFont.truetype("DataStorage/Fonts/UTM Thanh Nhac TL.ttf", size=50).getname()[0]
-DESCRIPTION_FONT = ImageFont.truetype("DataStorage/Fonts/UTM DAXMEDIUM.ttf", size=30).getname()[0]
+DESCRIPTION_FONT = ImageFont.truetype("DataStorage/Fonts/UTM DAXMEDIUM.TTF", size=30).getname()[0]
 
 # colors define
 COLOR_SKYBLUE = '#9ECEEA'

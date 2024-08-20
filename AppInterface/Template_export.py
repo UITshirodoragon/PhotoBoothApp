@@ -161,7 +161,7 @@ class Template_export(ctk.CTkFrame):
           self.Notification = ctk.CTkLabel(self.template_container,
                                            text = 'You forgot to choose template',
                                            text_color= COLOR_BLOODRED,
-                                           font = CTkFont(family=DESCRIPTION_FONT, size=20))
+                                           font = CTkFont(family=DESCRIPTION_FONT, size=18))
           # open arrow icon for next button, change to template edit
           next_button = ctk.CTkButton(master=self.template_container, 
                               text='NEXT',
@@ -207,7 +207,7 @@ class Template_export(ctk.CTkFrame):
      
      def next_to_capture_screen(self):
           if self.image_number_selection == 0:
-               self.Notification.place(relx = 0.7, rely = 0.78)
+               self.Notification.place(relx = 0.71, rely = 0.78)
                return None
           self.capture_screen.in_capture_screen = True
           self.capture_screen.Update_frame()

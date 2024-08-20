@@ -227,7 +227,7 @@ class User_Image_Gallery_Interface(ctk.CTkFrame):
             if self.gif_display_frame_count == (len(self.controller.list_gif_Tk[self.display_gif_index]) - 1):
                 self.controller.gif_end_display = True
                 self.gif_display_frame_count = 0
-            self.display_image_canvas.after(25, self.display_gif)
+            self.display_image_canvas.after(40, self.display_gif)
 
     def gallery_gif_update(self):
         #Set index number base on current page

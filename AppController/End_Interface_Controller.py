@@ -12,6 +12,9 @@ class End_Interface_Controller():
 
     def reset_parameters(self):
         self.new_user_directory()
+        if self.number_of_uses > 10:
+            os.remove(f'DataStorage/ImageGallery/user{self.number_of_uses - 10}')
+            os.remove(f'DataStorage/GIFGallery/user{self.number_of_uses - 10}')
          #Image variable
         self.end.gallery.controller.list_export_image_button.clear()
         self.end.gallery.controller.list_export_image_paths.clear()

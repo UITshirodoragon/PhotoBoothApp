@@ -21,25 +21,6 @@ from define import *
 from AppController.Template_export_controller import *
 from AppController.email_controller import send_email
 
-def change_to_capture_screen(prev):
-        '''# call export template function and save in DataStorage/ImageGallery as final.png
-        template_screen.controller.export_template(template_screen.get_template())
-
-        '''
-
-def change_to_email_inter(prev):
-        # delete previous page and show template edit interface
-        pass
-       
-def back(prev, next):
-        prev.pack_forget()
-        next.pack(expand = True, fill = 'both')
-
-def eport_template(prev, next):
-        prev.get_template()
-        prev.pack_forget()
-        next.pack(expand = True, fill = 'both')
-
 '''Create window'''
 window = ctk.CTk()
 window.title('Photobooth')
@@ -50,24 +31,24 @@ window.update()
 ctk.set_appearance_mode('light')
 '''Main code'''
 
-
-
 '''Interface'''
 start_screen = GSI.Get_Started_Interface(window)
 end_screen = EI.End_Interface(window, start_screen)
+
+#Create first directory
+#for i in range(10):
+end_screen.controller.new_user_directory()
+
 gallery_screen = UIGI.User_Image_Gallery_Interface(window, end_screen)
-capture_screen = ICI.Image_Capture_Interface(window, gallery_screen)
+capture_screen = ICI.Image_Capture_Interface(window, gallery_screen, end_screen)
 camera_configuration = CCI.Camera_Configuration_Interface(capture_screen, -0.2, 0)
 template_screen = TEX.Template_export(window, start_screen, gallery_screen, capture_screen, camera_configuration)
 template_edit = TED.Template_edit(window, gallery_screen)
 email_screen = EMI.Email_interface(window, template_edit)
 
-#Create first directory
-end_screen.controller.new_user_directory()
 
 capture_screen.camera_configuration = camera_configuration
 capture_screen.template_screen = template_screen
-capture_screen.end_screen = end_screen
 
 gallery_screen.camera_configuration = camera_configuration
 gallery_screen.capture_screen = capture_screen
@@ -85,6 +66,7 @@ end_screen.gallery = gallery_screen
 end_screen.email = email_screen
 end_screen.template_screen = template_screen
 end_screen.camera_configuration = camera_configuration
+
  # Detect press event on the main window to delete the frame
 window.bind_all('<Button>', start_screen.Next_To_Template_Screen)
 

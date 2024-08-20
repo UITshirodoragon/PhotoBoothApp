@@ -19,6 +19,7 @@ class End_Interface(ctk.CTkFrame):
         self.gallery = None
         self.template_screen = None
         self.camera_configuration = None
+        self.capture_screen = None
         self.controller = EIC.End_Interface_Controller(self)
 
         self.thanks_label =ctk.CTkLabel(self,
